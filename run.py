@@ -14,32 +14,41 @@ GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('feline_pine_cat_retirement_home')
 
 
-# def list_residents():
-#     details = SHEET.worksheet("details").get_all_values()
-#     print(details.columns.values)
+residents_list = ['Bluebell', 'Jafar', 'The Trunchbull', 'Bubbles', 'Artemis']
 
 
-# list_residents()
-
-    # new_age = input("Enter new resident's age:\n")
-    # new_sex = input("Enter new resident's sex (M or F):\n")
-    # new_breed = input("Enter new resident's breed ('unknown' if not known):\n")
-    # new_weight = input("Enter new resident's weight in kg:\n")
-    # new_healthy_weight = input("Enter new resident's target weight range (upper and lower limit, separated by a comma):\n")
-
-
-
-def get_todays_weight():
+def get_weight(residents):
     """
-    The user enters the up-to-date weight of the residents and it is uploaded
-    to the weight worksheet.
+    The user enters the up-to-date weight of the residents and validated.
     """
-    print("Enter the residents' weight in the below order.\n")
-    print("List of residents goes here.\n")
-    print("The readings should be in kilograms, separated by commas.\n")
+    weight_data = []
+    print("Update residents' weight below.\n")
+    print("The entry should be in kilograms.\n")
+    for i in residents:
+        while True:
+            try:
+                weight = float(input(f"Enter {i}'s weight:\n"))
+                break
+            except ValueError:
+                print("That is not a valid entry. Please enter a valid weight.\n")
+                
+        weight_data.append(weight)
 
-    weight_data_str = input("Enter today's weight readings:\n")
-    print(f"The weight list provided is {weight_data_str}")
+    return weight_data
 
-get_todays_weight()
 
+get_weight(residents_list)
+
+
+def update_weight_worksheet():
+    """
+    Updates weight worksheet with weight-data
+    """
+
+
+
+
+
+
+
+ 
