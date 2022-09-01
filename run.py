@@ -17,12 +17,24 @@ SHEET = GSPREAD_CLIENT.open('feline_pine_cat_retirement_home')
 residents_list = ['Bluebell', 'Jafar', 'The Trunchbull', 'Bubbles', 'Artemis']
 
 
+print("""\
+
+      |\      _,,,---,,_
+ZZZzz /,`.-'`'    -.  ;-;;,_
+     |,4-  ) )-,_. ,\ (  `'-'
+    '---''(_/--'  `-'\_)   
+                    """)
+
+
 def get_weight(residents):
     """
-    The user enters the up-to-date weight of the residents and validated.
+    Gets the up-to-date weight of the residents from the user and converts the
+    data into floats. Raises ValueError if the input cannot be converted into
+    a float. 
     """
     weight_data = []
-    print("Update residents' weight below.\n")
+    print("* * Weight Log Section * *\n")
+    print("Update residents' weight here.\n")
     print("The entry should be in kilograms.\n")
     for i in residents:
         while True:
@@ -30,25 +42,25 @@ def get_weight(residents):
                 weight = float(input(f"Enter {i}'s weight:\n"))
                 break
             except ValueError:
-                print("That is not a valid entry. Please enter a valid weight.\n")
+                print("That is not a valid entry! Please enter a valid weight.\n")
                 
         weight_data.append(weight)
 
     return weight_data
 
 
-get_weight(residents_list)
-
-
-def update_weight_worksheet():
+def update_weight_worksheet(weight_data):
     """
-    Updates weight worksheet with weight-data
+    Updates weight worksheet with weight-data from the get_weight function.
     """
+    print("Updating weight spreadsheet...\n")
+    weight_worksheet = SHEET.worksheet("weight")
+    weight_worksheet.append_row(weight_data)
+    print("Thank you for updating everyone's weight!\n")
 
 
 
 
 
-
-
- 
+weight_data = get_weight(residents_list)
+update_weight_worksheet(weight_data)
