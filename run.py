@@ -14,7 +14,14 @@ GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('feline_pine_cat_retirement_home')
 
 
-residents_list = ['Bluebell', 'Jafar', 'The Trunchbull', 'Bubbles', 'Artemis']
+residents_list = SHEET.worksheet("details").row_values(1)
+
+
+# def residents():
+#     print(residents_list)
+
+# residents()
+
 
 
 print("""\
@@ -56,7 +63,7 @@ def update_weight_worksheet(weight_data):
     print("Updating weight spreadsheet...\n")
     weight_worksheet = SHEET.worksheet("weight")
     weight_worksheet.append_row(weight_data)
-    print("Thank you for updating everyone's weight!\n")
+    print("Purrfect! Thank you for updating everyone's weight!\n")
 
 
 
