@@ -75,7 +75,7 @@ def ideal_weight_range():
 
 # When I tried to declare this variable inside the calculate_calories function, 
 # it kept throwing an error message as "not defined" when passed into the 
-# update_calories_worksheet function at the bottom
+# update_calories_worksheet function at the
 calories_data = []
 
 
@@ -85,7 +85,7 @@ def calculate_calories(weight):
     required - based on their latest weight readings. The general rule is that
     a cat requires 45 calories per kg of bodyweight.
     """
-    print("Calculating everyone's calories...")
+    print("Calculating everyone's RER...\n")
     # calories_data = []
     for i in weight:
         calories = i * 45
@@ -96,43 +96,27 @@ def calculate_calories(weight):
 
 def update_calories_worksheet(calories_data):
     """
-    Updates calories worksheet with RER data from the calculate_calories 
+    Updates calories worksheet with RER data from the calculate_calories
     function.
     """
-    print("Updating weight spreadsheet...\n")
+    print("Updating RER spreadsheet...\n")
     calories_worksheet = SHEET.worksheet("RER")
     calories_worksheet.append_row(calories_data)
     print("Everyone's RER has been updated!\n")
 
 
-# def calculate_food(residents, weight, ideal_weight):
-#     """
-#     Takes the latest weight data for the residents, compares it to their ideal
-#     weight range, and calculates how much food they should receive for weight
-#     loss, weight gain, or weight maintenance.
-#     """
-#     todays_food = []
-#     for res in residents and w in weight:
-#         # for w in weight:
-#         if w > ideal_weight:
-#             food_amount = w * 0.8
-#             print(f"{res} needs to lose some weight! {res} should eat {food_amount} grams of food today.\n")
-#             print(f"That means {res} should eat {food_amount / 2} grams of food per meal today.\n")
-#         elif w < ideal_weight:
-#             food_amount = w * 1.8
-#             print(f"{res} needs to gain some weight! {res} should eat {food_amount} grams of food today.\n")
-#             print(f"That means {res} should eat {food_amount / 2} grams of food per meal today.\n")
-#         else:
-#             food_amount = w * 1
-#             print(f"{res} is within the ideal weight range! {res} should eat {food_amount} grams of food today.\n")
-#             print(f"That means {res} should eat {food_amount / 2} grams of food per meal today.\n")
-#     todays_food.append(food_amount)
-
-#     print(todays_food)
+def calculate_multiplier(weight_data, ideal_weight):
+    """
+    Compares latest weight data against the ideal weight range and assigns
+    the appropriate multiplier based on whether recorded weight is above the
+    ideal weight range (weight loss multiplier), above it (weight gain
+    multiplier), or with the range (weight maintenance).
+    """
+    print(residents_ideal_weight)
 
 
 weight_data = get_weight(residents_list)
 update_weight_worksheet(weight_data)
 calculate_calories(weight_data)
 update_calories_worksheet(calories_data)
-# calculate_food(residents_list, weight_data, 5)
+calculate_multiplier(weight_data, residents_ideal_weight)
