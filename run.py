@@ -112,11 +112,37 @@ def calculate_multiplier(weight_data, ideal_weight):
     ideal weight range (weight loss multiplier), above it (weight gain
     multiplier), or with the range (weight maintenance).
     """
+    print(weight_data)
     print(residents_ideal_weight)
 
 
-weight_data = get_weight(residents_list)
-update_weight_worksheet(weight_data)
-calculate_calories(weight_data)
-update_calories_worksheet(calories_data)
-calculate_multiplier(weight_data, residents_ideal_weight)
+def weight_management_menu():
+    weight_data = get_weight(residents_list)
+    update_weight_worksheet(weight_data)
+    calculate_calories(weight_data)
+    update_calories_worksheet(calories_data)
+    calculate_multiplier(weight_data, residents_ideal_weight)
+
+
+def main():
+    """
+    Main menu and first page to appear to user. Contains all the options for
+    the user to select.
+    """
+    print("Welcome to the Feline Pine Cat Retirement Home management system.\n")
+    print("Please select from the options below.\n")
+    print("1. Resident Directory Management\n")
+    print("2. Weight Management Menu\n")
+    print("3. Food Management Menu")
+    print("4. Exit Management System\n")
+    
+    selection = input("Please make your selection:\n")
+
+    if selection == "1":
+        directory_menu()
+    elif selection == "2":
+        weight_management_menu()
+    elif selection == "3":
+        food_management_menu()
+    elif selection == "4":
+        print("Thank you for using the Management System.")
