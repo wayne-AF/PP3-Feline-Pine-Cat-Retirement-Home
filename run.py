@@ -15,6 +15,7 @@ SHEET = GSPREAD_CLIENT.open('feline_pine_cat_retirement_home')
 
 residents_list = SHEET.worksheet("details").row_values(1)
 residents_ideal_weight = SHEET.worksheet("details").row_values(5)
+new_resident_details = ["Name:", "Age:", "Sex (M or F):", "Breed:", "Ideal weight range (two numbers separated by a comma):"]
 
 
 # def residents():
@@ -34,8 +35,9 @@ def get_weight(residents):
     """
     Gets the up-to-date weight of the residents from the user and converts the
     data into floats. Raises ValueError if the input cannot be converted into
-    a float. 
+    a float.
     """
+    clear()
     weight_data = []
     print(" * * Weight Log Section * *\n")
     print(" Update residents' weight here.\n")
@@ -141,13 +143,55 @@ def directory_menu():
         elif selection == "2":
             display_past_residents()
         elif selection == "3":
-            add_new_resident()
+            add_new_resident(new_resident_details)
         elif selection == "4":
             remove_resident()
         elif selection == "5":
             main()
         else:
             input(" Please selection from the options above:\n")
+
+
+def add_new_resident(field):
+    """
+    Loops through the data fields specified in new_resident_details list, 
+    takes input data to create a new resident listing and appends to details
+    worksheet.
+    """
+    while True:
+        clear()
+        new_resident = []
+        print(" Enter the new resident's details below.")
+        
+        for i in field:
+            entry = input(f"{i}\n")
+            
+            new_resident.append(entry)
+            
+        print(" Thank you for entering the new resident's details. You entered:\n")
+        print(new_resident)
+        print(" If these details are correct, please use 'y' to upload to the directory.\n")
+        print(" If you made a mistake, please use 'n' to try again.\n")
+        selection = input(" Alternatively, please use 'x' to return to the previous menu.\n")
+
+        if selection == "y":
+            print("make this function")
+            # update_details_worksheet(new_resident)
+        elif selection == "n":
+            add_new_resident(new_resident_details)
+        elif selection == "x":
+            directory_menu()
+        else:
+            input(" Please select from the options above.")
+
+
+#     firstRow = len(sheet.row_values(1))
+# And updating the next cell using that number
+
+# projCol = firstRow+1
+# sheet.update_cell(1, projCol, projName)
+
+
 
 def main():
     """
@@ -156,7 +200,7 @@ def main():
     """
     while True:
         clear()
-        print(" Feline Pint Cat Retirement Home")
+        print(" Feline Pine Cat Retirement Home")
         print("""\
 
         |\      _,,,---,,_
