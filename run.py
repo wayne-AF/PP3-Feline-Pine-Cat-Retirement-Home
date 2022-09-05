@@ -25,13 +25,7 @@ residents_ideal_weight = SHEET.worksheet("details").row_values(5)
 
 
 
-# print("""\
 
-#       |\      _,,,---,,_
-# ZZZzz /,`.-'`'    -.  ;-;;,_
-#      |,4-  ) )-,_. ,\ (  `'-'
-#     '---''(_/--'  `-'\_)   
-#                     """)
 
 
 def get_weight(residents):
@@ -116,7 +110,7 @@ def calculate_multiplier(weight_data, ideal_weight):
     print(residents_ideal_weight)
 
 
-def weight_management_menu():
+def weight_log_menu():
     weight_data = get_weight(residents_list)
     update_weight_worksheet(weight_data)
     calculate_calories(weight_data)
@@ -129,20 +123,68 @@ def main():
     Main menu and first page to appear to user. Contains all the options for
     the user to select.
     """
-    print("Welcome to the Feline Pine Cat Retirement Home management system.\n")
+    print("Feline Pint Cat Retirement Home")
+    print("""\
+
+      |\      _,,,---,,_
+ZZZzz /,`.-'`'    -.  ;-;;,_
+     |,4-  ) )-,_. ,\ (  `'-'
+    '---''(_/--'  `-'\_)   
+                    """)
+    print("Welcome to the Feline Pine management system.\n")
     print("Please select from the options below.\n")
     print("1. Resident Directory Management\n")
-    print("2. Weight Management Menu\n")
-    print("3. Food Management Menu")
+    print("2. Weight Log Menu\n")
+    print("3. Food Management Menu\n")
     print("4. Exit Management System\n")
     
     selection = input("Please make your selection:\n")
-
+    
+        
     if selection == "1":
         directory_menu()
     elif selection == "2":
-        weight_management_menu()
+        weight_log_menu()
     elif selection == "3":
         food_management_menu()
     elif selection == "4":
-        print("Thank you for using the Management System.")
+        print("Thank you for using the Feline Pine Management System.\n")
+        print("Have a great day!")
+        
+    else:
+        print("Please select from the above options.")
+            
+
+main()
+
+
+            # try:
+            #     weight = float(input(f"Enter {i}'s weight:\n"))
+            #     break
+            # except ValueError:
+            #     print("That is not a valid entry! Please enter a valid weight.\n")
+
+    # while True:
+    #     clear()
+    #     print('Main Menu for Event Scheduler Application:\n')
+    #     print('1. Manage Events')
+    #     print('2. Manage Bookings')
+    #     print('3. Review Past Events')
+    #     print('4. Exit')
+    #     print('\nPlease select an option by entering a number between 1 and 4')
+
+    #     choice = input('Enter your choice here:\n')
+
+    #     if choice == '1':
+    #         sub_menu('Event', show_active_events, add_event, cancel_event)
+    #     elif choice == '2':
+    #         sub_menu('Booking', show_active_bookings, add_booking,
+    #                  cancel_booking)
+    #     elif choice == '3':
+    #         review_past_events()
+    #     elif choice == '4':
+    #         print('Goodbye !')
+    #         break
+    #     else:
+    #         print('Invalid selection. Please enter a digit between 1 and 4\n')
+    #         input('Press Enter to continue...\n')
