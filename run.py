@@ -23,9 +23,11 @@ residents_ideal_weight = SHEET.worksheet("details").row_values(5)
 
 # residents()
 
-
-
-
+def clear():
+    """
+    Clears screen
+    """
+    print('\033c')
 
 
 def get_weight(residents):
@@ -123,68 +125,39 @@ def main():
     Main menu and first page to appear to user. Contains all the options for
     the user to select.
     """
-    print("Feline Pint Cat Retirement Home")
-    print("""\
+    while True:
+        clear()
+        print("Feline Pint Cat Retirement Home")
+        print("""\
 
-      |\      _,,,---,,_
-ZZZzz /,`.-'`'    -.  ;-;;,_
-     |,4-  ) )-,_. ,\ (  `'-'
-    '---''(_/--'  `-'\_)   
-                    """)
-    print("Welcome to the Feline Pine management system.\n")
-    print("Please select from the options below.\n")
-    print("1. Resident Directory Management\n")
-    print("2. Weight Log Menu\n")
-    print("3. Food Management Menu\n")
-    print("4. Exit Management System\n")
+        |\      _,,,---,,_
+    ZZZzz /,`.-'`'    -.  ;-;;,_
+        |,4-  ) )-,_. ,\ (  `'-'
+        '---''(_/--'  `-'\_)   
+                        """)
     
-    selection = input("Please make your selection:\n")
-    
+        print("Welcome to the Feline Pine management system.\n")
+        print("Please select from the options below.\n")
+        print("1. Resident Directory Management\n")
+        print("2. Weight Log Menu\n")
+        print("3. Food Management Menu\n")
+        print("4. Exit Management System\n")
         
-    if selection == "1":
-        directory_menu()
-    elif selection == "2":
-        weight_log_menu()
-    elif selection == "3":
-        food_management_menu()
-    elif selection == "4":
-        print("Thank you for using the Feline Pine Management System.\n")
-        print("Have a great day!")
+        selection = input("Please make your selection:\n")
         
-    else:
-        print("Please select from the above options.")
             
+        if selection == "1":
+            directory_menu()
+        elif selection == "2":
+            weight_log_menu()
+        elif selection == "3":
+            food_management_menu()
+        elif selection == "4":
+            print("Thank you for using the Feline Pine Management System.\n")
+            print("Have a great day!")
+            break
+        else:
+            input("Please select from the options above:\n")
+
 
 main()
-
-
-            # try:
-            #     weight = float(input(f"Enter {i}'s weight:\n"))
-            #     break
-            # except ValueError:
-            #     print("That is not a valid entry! Please enter a valid weight.\n")
-
-    # while True:
-    #     clear()
-    #     print('Main Menu for Event Scheduler Application:\n')
-    #     print('1. Manage Events')
-    #     print('2. Manage Bookings')
-    #     print('3. Review Past Events')
-    #     print('4. Exit')
-    #     print('\nPlease select an option by entering a number between 1 and 4')
-
-    #     choice = input('Enter your choice here:\n')
-
-    #     if choice == '1':
-    #         sub_menu('Event', show_active_events, add_event, cancel_event)
-    #     elif choice == '2':
-    #         sub_menu('Booking', show_active_bookings, add_booking,
-    #                  cancel_booking)
-    #     elif choice == '3':
-    #         review_past_events()
-    #     elif choice == '4':
-    #         print('Goodbye !')
-    #         break
-    #     else:
-    #         print('Invalid selection. Please enter a digit between 1 and 4\n')
-    #         input('Press Enter to continue...\n')
