@@ -1,5 +1,8 @@
 import gspread
 from google.oauth2.service_account import Credentials
+from pprint import pprint
+import pandas as pd
+import numpy as np
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -15,7 +18,7 @@ SHEET = GSPREAD_CLIENT.open('feline_pine_cat_retirement_home')
 
 residents_list = SHEET.worksheet("details").row_values(1)
 residents_ideal_weight = SHEET.worksheet("details").row_values(5)
-new_resident_details = ["Name:", "Age:", "Sex (M or F):", "Breed:", "Ideal weight range (two numbers separated by a comma):"]
+new_resident_keys = ["Name:", "Age:", "Sex (M or F):", "Breed:", "Ideal weight range (two numbers separated by a comma):"]
 
 
 # def residents():
@@ -71,6 +74,7 @@ def ideal_weight_range():
     the calculate_food function.
     """
 
+
 # When I tried to declare this variable inside the calculate_calories function, 
 # it kept throwing an error message as "not defined" when passed into the 
 # update_calories_worksheet function at the
@@ -103,6 +107,23 @@ def update_calories_worksheet(calories_data):
     print(" Everyone's RER has been updated!\n")
 
 
+def convert_weight_range_float(ideal_weight):
+    """
+    Takes the weight range values from the details worksheet and converts
+    them into floats.
+    """
+    print("Retrieving residents' healthy weight range...")
+    ideal_weight_list = [item.split(', ') for item in ideal_weight]
+    ideal_weight_list_flat = [item for i in ideal_weight_list for item in i]
+    ideal_weight_list_flat_float = [float(num) for num in ideal_weight_list_flat]
+
+    ideal_weight_range = []
+    for i in range(0, len(ideal_weight_list_flat_float), 2):
+        ideal_weight_range.append((ideal_weight_list_flat_float[i], ideal_weight_list_flat_float[i+1]))
+    
+    return ideal_weight_range
+    
+    
 def calculate_multiplier(weight_data, ideal_weight):
     """
     Compares latest weight data against the ideal weight range and assigns
@@ -110,6 +131,8 @@ def calculate_multiplier(weight_data, ideal_weight):
     ideal weight range (weight loss multiplier), above it (weight gain
     multiplier), or with the range (weight maintenance).
     """
+    
+    
     print(weight_data)
     print(residents_ideal_weight)
 
@@ -119,7 +142,28 @@ def weight_log_menu():
     update_weight_worksheet(weight_data)
     calculate_calories(weight_data)
     update_calories_worksheet(calories_data)
-    calculate_multiplier(weight_data, residents_ideal_weight)
+    convert_weight_range_float(residents_ideal_weight)
+    # calculate_multiplier(weight_data, ideal_weight_range)
+
+
+def display_current_residents():
+    """
+    Creates a dataset with all the residents' data from the details worksheet
+    and displays it in a table.
+    """
+    clear()
+    print("Here are all of the current residents.")
+    # details_worksheet = SHEET.worksheet("details")
+    
+    # current_residents = {
+    #     "name": ["Blubell", "Jafar", "Poundcake"],
+    #     "age": [details_worksheet.row_values(2)],
+    #     "sex": [details_worksheet.row_values(3)],
+    #     "breed": [details_worksheet.row_values(4)]
+    # }
+    print("why isn't this working")
+    # residents_data_chart = pd.DataFrame(current_residents)
+    # print(residents_data_chart)
 
 
 def directory_menu():
@@ -138,58 +182,64 @@ def directory_menu():
 
         selection = input(" Please make your selection:\n")
 
-        if selection == "1":
+        if selection == "0":
+            print("nope")
+        elif selection == "1":  
             display_current_residents()
         elif selection == "2":
             display_past_residents()
         elif selection == "3":
-            add_new_resident(new_resident_details)
+            add_new_resident(new_resident_keys)
         elif selection == "4":
             remove_resident()
         elif selection == "5":
             main()
         else:
-            input(" Please selection from the options above:\n")
+            input(" Please select from the options above:\n")
+
+
+def experiment():
+    """
+    Uses the data from the add_new_resident function and adds it to the 
+    """
+    print("updating details worksheet")
+
+
 
 
 def add_new_resident(field):
     """
-    Loops through the data fields specified in new_resident_details list, 
+    Loops through the data fields specified in new_resident_keys list, 
     takes input data to create a new resident listing and appends to details
     worksheet.
     """
+    
     while True:
         clear()
-        new_resident = []
+        new_resident_details = []
         print(" Enter the new resident's details below.")
         
         for i in field:
             entry = input(f"{i}\n")
             
-            new_resident.append(entry)
+            new_resident_details.append(entry)
+
+            # return new_resident_details
             
         print(" Thank you for entering the new resident's details. You entered:\n")
-        print(new_resident)
-        print(" If these details are correct, please use 'y' to upload to the directory.\n")
+        print(new_resident_details)
+        print(" If these details are correct, please use '5' to upload to the directory.\n")
         print(" If you made a mistake, please use 'n' to try again.\n")
         selection = input(" Alternatively, please use 'x' to return to the previous menu.\n")
 
-        if selection == "y":
-            print("make this function")
-            # update_details_worksheet(new_resident)
+        if selection == "5":
+            experiment()
         elif selection == "n":
-            add_new_resident(new_resident_details)
+            add_new_resident(new_resident_keys)
         elif selection == "x":
             directory_menu()
         else:
             input(" Please select from the options above.")
-
-
-#     firstRow = len(sheet.row_values(1))
-# And updating the next cell using that number
-
-# projCol = firstRow+1
-# sheet.update_cell(1, projCol, projName)
 
 
 
@@ -233,3 +283,21 @@ def main():
 
 
 main()
+
+
+# while True:
+#         clear()
+#         print("These are all of the current residents.\n")
+#         details_worksheet = SHEET.worksheet("details")
+#         all_res_dict = np.array(details_worksheet.get_all_values())
+        
+#         print(all_res_dict)
+#         (print("Use 'x' to return to the previous menu.\n"))
+#         selection = input("Use 'm' to return to the main menu.\n")
+
+#         if selection == "x":
+#             directory_menu()
+#         elif selection == "m":
+#             main()
+#         else:
+#             input(" Please select from the options above.\n")
