@@ -122,19 +122,55 @@ def convert_weight_range_float(ideal_weight):
         ideal_weight_range.append((ideal_weight_list_flat_float[i], ideal_weight_list_flat_float[i+1]))
     
     return ideal_weight_range
-    
-    
+
+
 def calculate_multiplier(weight_data, ideal_weight):
     """
     Compares latest weight data against the ideal weight range and assigns
     the appropriate multiplier based on whether recorded weight is above the
-    ideal weight range (weight loss multiplier), above it (weight gain
-    multiplier), or with the range (weight maintenance).
+    ideal weight range (weight loss multiplier), below it (weight gain
+    multiplier), or within the range (weight maintenance multiplier).
     """
+    calorie_multipliers = []
+    for i, j in zip(weight_data, ideal_weight):
+        for num in range(j[0], j[1]):
+            if i < j[0]:
+                multiplier = 1.8
+            elif i > j[1]:
+                multiplier = 0.8
+            else:
+                multiplier = 1.2
+            calorie_multipliers.append(multiplier)
+
+        print(calorie_multipliers)
+        input("testing")
+
     
     
-    print(weight_data)
-    print(residents_ideal_weight)
+    
+    #     if i < j:
+    #         multiplier = 1.8
+    #     elif i > j:
+    #         multiplier = 0.8
+    #     else:
+    #         multiplier = 1.2
+    #     calorie_multipliers.append(multiplier)
+    # print(calorie_multipliers)
+    # input("testing")
+
+
+
+#          j in weight_range:
+# #             if i < j-0.5:
+# #                 print("multiplier is 1.8")
+# #             elif i > j+0.5:
+# #                 print("multiplier is 0.8")
+# #             else:
+# #                 print("multiplier is 1.2")
+    
+    
+#     print(weight_data)
+#     print(residents_ideal_weight)
 
 
 def weight_log_menu():
@@ -143,7 +179,7 @@ def weight_log_menu():
     calculate_calories(weight_data)
     update_calories_worksheet(calories_data)
     convert_weight_range_float(residents_ideal_weight)
-    # calculate_multiplier(weight_data, ideal_weight_range)
+    calculate_multiplier(weight_data, ideal_weight_range)
 
 
 def display_current_residents():
