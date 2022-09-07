@@ -204,13 +204,31 @@ def display_current_residents():
         directory_menu()
     else:
         pass
-        
+
 
 def display_past_residents():
     """
     Creates a dataset with all the data from the past_residents worksheet
     and displays it in a table.
     """
+    clear()
+    print("Here are all of the past residents.")
+    past_residents_worksheet = SHEET.worksheet("past_residents")
+    past_residents = {
+        'age': (past_residents_worksheet.row_values(2)),
+        'sex': (past_residents_worksheet.row_values(3)),
+        'breed': (past_residents_worksheet.row_values(4)),
+        'status': (past_residents_worksheet.row_values(5))
+    }
+    past_residents_data_chart = pd.DataFrame(past_residents, index=[past_residents_worksheet.row_values(1)])
+    print(past_residents_data_chart)
+
+    selection = input(" Use any key to return to the previous menu.\n")
+
+    if selection:
+        directory_menu()
+    else:
+        pass
 
 
 def add_new_resident(field):
