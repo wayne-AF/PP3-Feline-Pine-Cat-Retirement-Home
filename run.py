@@ -189,17 +189,82 @@ def display_current_residents():
     """
     clear()
     print("Here are all of the current residents.")
-    # details_worksheet = SHEET.worksheet("details")
+    details_worksheet = SHEET.worksheet("details")
+    current_residents = {
+        'age': (details_worksheet.row_values(2)),
+        'sex': (details_worksheet.row_values(3)),
+        'breed': (details_worksheet.row_values(4))
+    }
+    residents_data_chart = pd.DataFrame(current_residents, index=[residents_list])
+    print(residents_data_chart)
+
+    selection = input(" Use any key to return to the previous menu.\n")
+
+    if selection:
+        directory_menu()
+    else:
+        pass
+        
+
+def display_past_residents():
+    """
+    Creates a dataset with all the data from the past_residents worksheet
+    and displays it in a table.
+    """
+
+
+def add_new_resident(field):
+    """
+    Loops through the data fields specified in new_resident_keys list, 
+    takes input data to create a new resident listing and appends to details
+    worksheet.
+    """
     
-    # current_residents = {
-    #     "name": ["Blubell", "Jafar", "Poundcake"],
-    #     "age": [details_worksheet.row_values(2)],
-    #     "sex": [details_worksheet.row_values(3)],
-    #     "breed": [details_worksheet.row_values(4)]
-    # }
-    print("why isn't this working")
-    # residents_data_chart = pd.DataFrame(current_residents)
-    # print(residents_data_chart)
+    while True:
+        clear()
+        new_resident_details = []
+        print(" Enter the new resident's details below.")
+        
+        for i in field:
+            entry = input(f"{i}\n")
+            
+            new_resident_details.append(entry)
+
+            # return new_resident_details
+            
+        print(" Thank you for entering the new resident's details. You entered:\n")
+        print(new_resident_details)
+        print(" If these details are correct, please use '5' to upload to the directory.\n")
+        print(" If you made a mistake, please use 'n' to try again.\n")
+        selection = input(" Alternatively, please use 'x' to return to the previous menu.\n")
+
+        if selection == "5":
+            update_worksheets_new_resident(new_resident_details)
+        elif selection == "n":
+            add_new_resident(new_resident_keys)
+        elif selection == "x":
+            directory_menu()
+        else:
+            input(" Please select from the options above.")
+
+
+def update_worksheets_new_resident(details):
+    """
+    Takes the data input by user in add_new_resident function and updates the
+    details, weight, food, and RER worksheets.
+    """
+    print("Updating worksheets...")
+    details_worksheet = SHEET.worksheet("details")
+    details_worksheet.append_col(details)
+    input("waiting")
+
+
+def remove_resident():
+    """
+    Removes the selected resident's data from the details, weight, food, and
+    RER spreadsheets, and adds the resident's details to the past_residents
+    spreadsheet.
+    """
 
 
 def directory_menu():
@@ -232,51 +297,6 @@ def directory_menu():
             main()
         else:
             input(" Please select from the options above:\n")
-
-
-def experiment():
-    """
-    Uses the data from the add_new_resident function and adds it to the 
-    """
-    print("updating details worksheet")
-
-
-
-
-def add_new_resident(field):
-    """
-    Loops through the data fields specified in new_resident_keys list, 
-    takes input data to create a new resident listing and appends to details
-    worksheet.
-    """
-    
-    while True:
-        clear()
-        new_resident_details = []
-        print(" Enter the new resident's details below.")
-        
-        for i in field:
-            entry = input(f"{i}\n")
-            
-            new_resident_details.append(entry)
-
-            # return new_resident_details
-            
-        print(" Thank you for entering the new resident's details. You entered:\n")
-        print(new_resident_details)
-        print(" If these details are correct, please use '5' to upload to the directory.\n")
-        print(" If you made a mistake, please use 'n' to try again.\n")
-        selection = input(" Alternatively, please use 'x' to return to the previous menu.\n")
-
-        if selection == "5":
-            experiment()
-        elif selection == "n":
-            add_new_resident(new_resident_keys)
-        elif selection == "x":
-            directory_menu()
-        else:
-            input(" Please select from the options above.")
-
 
 
 def main():
