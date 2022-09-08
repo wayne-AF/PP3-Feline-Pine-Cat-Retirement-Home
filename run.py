@@ -17,6 +17,7 @@ SHEET = GSPREAD_CLIENT.open('feline_pine_cat_retirement_home')
 
 
 residents_list = SHEET.worksheet("details").row_values(1)
+past_residents_list = SHEET.worksheet("past_residents").col_values(1)
 residents_ideal_weight = SHEET.worksheet("details").row_values(5)
 new_resident_keys = ["Name:", "Age:", "Sex (M or F):", "Breed:", "Minimum weight:", "Maximum weight:"]
 
@@ -34,45 +35,45 @@ def clear():
     print('\033c')
 
 
-def get_weight(residents):
-    """
-    Gets the up-to-date weight of the residents from the user and converts the
-    data into floats. Raises ValueError if the input cannot be converted into
-    a float.
-    """
-    clear()
-    weight_data = []
-    print(" * * Weight Log Section * *\n")
-    print(" Update residents' weight here.\n")
-    print(" The entry should be in kilograms.\n")
-    for i in residents:
-        while True:
-            try:
-                weight = float(input(f" Enter {i}'s weight:\n"))
-                break
-            except ValueError:
-                print(" That is not a valid entry! Please enter a valid weight.\n")
+# def get_weight(residents):
+#     """
+#     Gets the up-to-date weight of the residents from the user and converts the
+#     data into floats. Raises ValueError if the input cannot be converted into
+#     a float.
+#     """
+#     clear()
+#     weight_data = []
+#     print(" * * Weight Log Section * *\n")
+#     print(" Update residents' weight here.\n")
+#     print(" The entry should be in kilograms.\n")
+#     for i in residents:
+#         while True:
+#             try:
+#                 weight = float(input(f" Enter {i}'s weight:\n"))
+#                 break
+#             except ValueError:
+#                 print(" That is not a valid entry! Please enter a valid weight.\n")
 
-        weight_data.append(weight)
+#         weight_data.append(weight)
 
-    return weight_data
-
-
-def update_weight_worksheet(weight):
-    """
-    Updates weight worksheet with weight-data from the get_weight function.
-    """
-    print(" Updating weight spreadsheet...\n")
-    weight_worksheet = SHEET.worksheet("weight")
-    weight_worksheet.append_row(weight)
-    print(" Purrfect! Thank you for updating everyone's weight!\n")
+#     return weight_data
 
 
-def ideal_weight_range():
-    """
-    Takes the list of ideal weights and converts them into floats to be used in
-    the calculate_food function.
-    """
+# def update_weight_worksheet(weight):
+#     """
+#     Updates weight worksheet with weight-data from the get_weight function.
+#     """
+#     print(" Updating weight spreadsheet...\n")
+#     weight_worksheet = SHEET.worksheet("weight")
+#     weight_worksheet.append_row(weight)
+#     print(" Purrfect! Thank you for updating everyone's weight!\n")
+
+
+# def ideal_weight_range():
+#     """
+#     Takes the list of ideal weights and converts them into floats to be used in
+#     the calculate_food function.
+#     """
 
 
 # When I tried to declare this variable inside the calculate_calories function, 
@@ -81,78 +82,78 @@ def ideal_weight_range():
 calories_data = []
 
 
-def calculate_calories(weight):
-    """
-    Calculates the residents' Resting Energy Requirements (RER) - the calories
-    required - based on their latest weight readings. The general rule is that
-    a cat requires 45 calories per kg of bodyweight.
-    """
-    print(" Calculating everyone's RER...\n")
-    # calories_data = []
-    for i in weight:
-        calories = i * 45
-        calories_data.append(calories)
+# def calculate_calories(weight):
+    # """
+    # Calculates the residents' Resting Energy Requirements (RER) - the calories
+    # required - based on their latest weight readings. The general rule is that
+    # a cat requires 45 calories per kg of bodyweight.
+    # """
+    # print(" Calculating everyone's RER...\n")
+    # # calories_data = []
+    # for i in weight:
+    #     calories = i * 45
+    #     calories_data.append(calories)
 
-    return calories_data
-
-
-def update_calories_worksheet(calories_data):
-    """
-    Updates calories worksheet with RER data from the calculate_calories
-    function.
-    """
-    print(" Updating RER spreadsheet...\n")
-    calories_worksheet = SHEET.worksheet("RER")
-    calories_worksheet.append_row(calories_data)
-    print(" Everyone's RER has been updated!\n")
+    # return calories_data
 
 
-def convert_weight_range_float(ideal_weight):
-    """
-    Takes the weight range values from the details worksheet and converts
-    them into floats.
-    """
-    print("Retrieving residents' healthy weight range...")
-    ideal_weight_list = [item.split(', ') for item in ideal_weight]
-    ideal_weight_list_flat = [item for i in ideal_weight_list for item in i]
-    ideal_weight_list_flat_float = [float(num) for num in ideal_weight_list_flat]
+# def update_calories_worksheet(calories_data):
+#     """
+#     Updates calories worksheet with RER data from the calculate_calories
+#     function.
+#     """
+#     print(" Updating RER spreadsheet...\n")
+#     calories_worksheet = SHEET.worksheet("RER")
+#     calories_worksheet.append_row(calories_data)
+#     print(" Everyone's RER has been updated!\n")
 
-    ideal_weight_range = []
-    for i in range(0, len(ideal_weight_list_flat_float), 2):
-        ideal_weight_range.append((ideal_weight_list_flat_float[i], ideal_weight_list_flat_float[i+1]))
+
+# def convert_weight_range_float(ideal_weight):
+    # """
+    # Takes the weight range values from the details worksheet and converts
+    # them into floats.
+    # """
+    # print("Retrieving residents' healthy weight range...")
+    # ideal_weight_list = [item.split(', ') for item in ideal_weight]
+    # ideal_weight_list_flat = [item for i in ideal_weight_list for item in i]
+    # ideal_weight_list_flat_float = [float(num) for num in ideal_weight_list_flat]
+
+    # ideal_weight_range = []
+    # for i in range(0, len(ideal_weight_list_flat_float), 2):
+    #     ideal_weight_range.append((ideal_weight_list_flat_float[i], ideal_weight_list_flat_float[i+1]))
     
-    return ideal_weight_range
+    # return ideal_weight_range
 
 
-def calculate_multiplier(weight_data, ideal_weight):
-    """
-    Compares latest weight data against the ideal weight range and assigns
-    the appropriate multiplier based on whether recorded weight is above the
-    ideal weight range (weight loss multiplier), below it (weight gain
-    multiplier), or within the range (weight maintenance multiplier).
-    """
-    calorie_multipliers = []
-    for i, j in zip(weight_data, ideal_weight):
-        for num in range(j[0], j[1]):
-            if i < j[0]:
-                multiplier = 1.8
-            elif i > j[1]:
-                multiplier = 0.8
-            else:
-                multiplier = 1.2
-            calorie_multipliers.append(multiplier)
+# def calculate_multiplier(weight_data, ideal_weight):
+#     """
+#     Compares latest weight data against the ideal weight range and assigns
+#     the appropriate multiplier based on whether recorded weight is above the
+#     ideal weight range (weight loss multiplier), below it (weight gain
+#     multiplier), or within the range (weight maintenance multiplier).
+#     """
+#     calorie_multipliers = []
+#     for i, j in zip(weight_data, ideal_weight):
+#         for num in range(j[0], j[1]):
+#             if i < j[0]:
+#                 multiplier = 1.8
+#             elif i > j[1]:
+#                 multiplier = 0.8
+#             else:
+#                 multiplier = 1.2
+#             calorie_multipliers.append(multiplier)
 
-        print(calorie_multipliers)
-        input("testing")
+#         print(calorie_multipliers)
+#         input("testing")
 
 
-def weight_log_menu():
-    weight_data = get_weight(residents_list)
-    update_weight_worksheet(weight_data)
-    calculate_calories(weight_data)
-    update_calories_worksheet(calories_data)
-    convert_weight_range_float(residents_ideal_weight)
-    calculate_multiplier(weight_data, ideal_weight_range)
+# def weight_log_menu():
+#     weight_data = get_weight(residents_list)
+#     update_weight_worksheet(weight_data)
+#     calculate_calories(weight_data)
+#     update_calories_worksheet(calories_data)
+#     convert_weight_range_float(residents_ideal_weight)
+#     calculate_multiplier(weight_data, ideal_weight_range)
 
 
 def display_current_residents():
@@ -162,11 +163,12 @@ def display_current_residents():
     """
     clear()
     print("Here are all of the current residents.")
-    details_worksheet = SHEET.worksheet("details")
+    current_residents_worksheet = SHEET.worksheet("current residents")
     current_residents = {
-        'age': (details_worksheet.row_values(2)),
-        'sex': (details_worksheet.row_values(3)),
-        'breed': (details_worksheet.row_values(4))
+        'age': (current_residents_worksheet.col_values(2)),
+        'sex': (current_residents_worksheet.col_values(3)),
+        'breed': (current_residents_worksheet.col_values(4)),
+        'medical conditions': (current_residents_worksheet.col_values(7))
     }
     residents_data_chart = pd.DataFrame(current_residents, index=[residents_list])
     print(residents_data_chart)
@@ -186,18 +188,15 @@ def display_past_residents():
     """
     clear()
     print("Here are all of the past residents.")
-    past_residents_worksheet = SHEET.worksheet("past_residents").get_all_values()
-    print(past_residents_worksheet)
-    # import sys    
-    # sys.exit()
-   
+    past_residents_worksheet = SHEET.worksheet("past_residents")
     past_residents = {
-        'age': (past_residents_worksheet.row_values(2)),
-        'sex': (past_residents_worksheet.row_values(3)),
-        'breed': (past_residents_worksheet.row_values(4)),
-        'status': (past_residents_worksheet.row_values(5))
+        'age': (past_residents_worksheet.col_values(2)),
+        'sex': (past_residents_worksheet.col_values(3)),
+        'breed': (past_residents_worksheet.col_values(4)),
+        'medical conditions': (past_residents_worksheet.col_values(5)),
+        'status': (past_residents_worksheet.col_values(6))
     }
-    past_residents_data_chart = pd.DataFrame(past_residents, index=[past_residents_worksheet.row_values(1)])
+    past_residents_data_chart = pd.DataFrame(past_residents, index=[past_residents_list])
     print(past_residents_data_chart)
 
     selection = input(" Use any key to return to the previous menu.\n")
