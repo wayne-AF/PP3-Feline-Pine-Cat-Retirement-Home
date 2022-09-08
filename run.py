@@ -18,7 +18,7 @@ SHEET = GSPREAD_CLIENT.open('feline_pine_cat_retirement_home')
 
 residents_list = SHEET.worksheet("details").row_values(1)
 residents_ideal_weight = SHEET.worksheet("details").row_values(5)
-new_resident_keys = ["Name:", "Age:", "Sex (M or F):", "Breed:", "Ideal weight range (two numbers separated by a comma):"]
+new_resident_keys = ["Name:", "Age:", "Sex (M or F):", "Breed:", "Minimum weight:", "Maximum weight:"]
 
 
 # def residents():
@@ -145,33 +145,6 @@ def calculate_multiplier(weight_data, ideal_weight):
         print(calorie_multipliers)
         input("testing")
 
-    
-    
-    
-    #     if i < j:
-    #         multiplier = 1.8
-    #     elif i > j:
-    #         multiplier = 0.8
-    #     else:
-    #         multiplier = 1.2
-    #     calorie_multipliers.append(multiplier)
-    # print(calorie_multipliers)
-    # input("testing")
-
-
-
-#          j in weight_range:
-# #             if i < j-0.5:
-# #                 print("multiplier is 1.8")
-# #             elif i > j+0.5:
-# #                 print("multiplier is 0.8")
-# #             else:
-# #                 print("multiplier is 1.2")
-    
-    
-#     print(weight_data)
-#     print(residents_ideal_weight)
-
 
 def weight_log_menu():
     weight_data = get_weight(residents_list)
@@ -213,7 +186,11 @@ def display_past_residents():
     """
     clear()
     print("Here are all of the past residents.")
-    past_residents_worksheet = SHEET.worksheet("past_residents")
+    past_residents_worksheet = SHEET.worksheet("past_residents").get_all_values()
+    print(past_residents_worksheet)
+    # import sys    
+    # sys.exit()
+   
     past_residents = {
         'age': (past_residents_worksheet.row_values(2)),
         'sex': (past_residents_worksheet.row_values(3)),
@@ -252,18 +229,18 @@ def add_new_resident(field):
             
         print(" Thank you for entering the new resident's details. You entered:\n")
         print(new_resident_details)
-        print(" If these details are correct, please use '5' to upload to the directory.\n")
+        print(" If these details are correct, please use 'y' to upload to the directory.\n")
         print(" If you made a mistake, please use 'n' to try again.\n")
         selection = input(" Alternatively, please use 'x' to return to the previous menu.\n")
 
-        if selection == "5":
+        if selection == "y":
             update_worksheets_new_resident(new_resident_details)
         elif selection == "n":
             add_new_resident(new_resident_keys)
         elif selection == "x":
             directory_menu()
         else:
-            input(" Please select from the options above.")
+            input(" Please select from the options above.\n")
 
 
 def update_worksheets_new_resident(details):
@@ -271,17 +248,24 @@ def update_worksheets_new_resident(details):
     Takes the data input by user in add_new_resident function and updates the
     details, weight, food, and RER worksheets.
     """
-    print("Updating worksheets...")
-    details_worksheet = SHEET.worksheet("details")
-    details_worksheet.append_col(details)
-    input("waiting")
+    print("Updating directory...")
+    current_residents_worksheet = SHEET.worksheet("current_residents")
+    current_residents_worksheet.append_row(details)
+    print("Directory updated!")
+    selection = input(" Use any key to return to the previous menu.\n")
+
+    if selection:
+        directory_menu()
+    else:
+        pass
 
 
 def remove_resident():
     """
     Removes the selected resident's data from the details, weight, food, and
     RER spreadsheets, and adds the resident's details to the past_residents
-    spreadsheet.
+    spreadsheet. Also asks the user to update the resident's status as deceased
+    or adopted.
     """
 
 
@@ -301,9 +285,7 @@ def directory_menu():
 
         selection = input(" Please make your selection:\n")
 
-        if selection == "0":
-            print("nope")
-        elif selection == "1":  
+        if selection == "1":
             display_current_residents()
         elif selection == "2":
             display_past_residents()
@@ -358,6 +340,7 @@ def main():
 
 main()
 
+# display_past_residents()
 
 # while True:
 #         clear()
