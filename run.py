@@ -251,33 +251,81 @@ def add_new_resident(field):
     takes input data to create a new resident listing and appends to current
     residents worksheet.
     """
-    
+    clear()
+    print(" * * Add Resident * * ")
+    print(" Enter the new resident's details below.")
+    new_resident_details = []
     while True:
-        clear()
-        new_resident_details = []
-        print(" Enter the new resident's details below.")
-        
-        for i in field:
-            entry = input(f"{i}\n")
+
+        name = input("Name:\n").strip().capitalize()
+        if len(name) == 0:
+            print("Please enter a valid name.\n")
+            continue
+
+        if not isalpha(name):
+            print("Please use only letters in the resident's name.")
+            continue
+
+        new_resident_details.append(name)
+        break
+
+    while True:
+
+        age = input("Age:\n").strip()
+        try:
+            age = int(age)
+
+        except ValueError:
+            print("Please enter a valid age!\n")
+            continue
+
+        new_resident_details.append(age)
+        break
+
+    while True:
+
+        sex = input("Sex (M/F):\n").strip().upper()
+        if sex not in ["M", "F"]:
+            print("Please enter M or F.")
+            continue
+        else:
+            new_resident_details.append(sex)
+            break
+
+    while True:
+
+        breed = input("Breed:\n").strip().capitalize()
+        if len(breed) == 0:
+            print("Please provide an entry.\n")
+            continue
+
+        if not isalpha(breed):
+            print("Please use only letters in the resident's breed.")
+            continue
+
+        new_resident_details.append(breed)
+
+        # for i in field:
+        #     entry = input(f"{i}\n")
             
-            new_resident_details.append(entry)
+        #     new_resident_details.append(entry)
 
             # return new_resident_details
             
-        print(" Thank you for entering the new resident's details. You entered:\n")
-        print(new_resident_details)
-        print(" If these details are correct, please use 'y' to upload to the directory.\n")
-        print(" If you made a mistake, please use 'n' to try again.\n")
-        selection = input(" Alternatively, please use 'x' to return to the previous menu.\n")
+    print(" Thank you for entering the new resident's details. You entered:\n")
+    print(new_resident_details)
+    print(" If these details are correct, please use 'y' to upload to the directory.\n")
+    print(" If you made a mistake, please use 'n' to try again.\n")
+    selection = input(" Alternatively, please use 'x' to return to the previous menu.\n")
 
-        if selection == "y":
-            update_worksheets_new_resident(new_resident_details)
-        elif selection == "n":
-            add_new_resident(new_resident_keys)
-        elif selection == "x":
-            directory_menu()
-        else:
-            input(" Please select from the options above.\n")
+    if selection == "y":
+        update_worksheets_new_resident(new_resident_details)
+    elif selection == "n":
+        add_new_resident(new_resident_keys)
+    elif selection == "x":
+        directory_menu()
+    else:
+        input(" Please select from the options above.\n")
 
 
 def update_worksheets_new_resident(details):
