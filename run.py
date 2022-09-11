@@ -2,6 +2,7 @@ import gspread
 from google.oauth2.service_account import Credentials
 from pprint import pprint
 import pandas as pd
+import math
 import numpy as np
 
 SCOPE = [
@@ -19,7 +20,7 @@ SHEET = GSPREAD_CLIENT.open('feline_pine_cat_retirement_home')
 residents_list = SHEET.worksheet("current residents").col_values(1)
 past_residents_list = SHEET.worksheet("past residents").col_values(1)
 residents_ideal_weight = SHEET.worksheet("current residents").col_values(5)
-new_resident_keys = ["Name:", "Age:", "Sex (M or F):", "Breed:", "Ideal weight (+/- 0.5):", "Medical conditions:"]
+recent_weight_data = SHEET.worksheet("weight").row_values
 
 
 # def residents():
@@ -59,21 +60,14 @@ def get_weight(residents):
     return weight_data
 
 
-# def update_weight_worksheet(weight):
-#     """
-#     Updates weight worksheet with weight-data from the get_weight function.
-#     """
-#     print(" Updating weight spreadsheet...\n")
-#     weight_worksheet = SHEET.worksheet("weight")
-#     weight_worksheet.append_row(weight)
-#     print(" Purrfect! Thank you for updating everyone's weight!\n")
-
-
-# def ideal_weight_range():
-#     """
-#     Takes the list of ideal weights and converts them into floats to be used in
-#     the calculate_food function.
-#     """
+def update_weight_worksheet(weight):
+    """
+    Updates weight worksheet with weight-data from the get_weight function.
+    """
+    print("Updating weight spreadsheet...\n")
+    weight_worksheet = SHEET.worksheet("weight")
+    weight_worksheet.append_row(weight)
+    print("Purrfect! Thank you for updating everyone's weight!\n")
 
 
 # When I tried to declare this variable inside the calculate_calories function, 
@@ -82,64 +76,52 @@ def get_weight(residents):
 calories_data = []
 
 
-def calculate_calories(weight):
+def calculate_calories(weight_data):
     """
     Calculates the residents' Resting Energy Requirements (RER) - the calories
     required - based on their latest weight readings. The general rule is that
     a cat requires 45 calories per kg of bodyweight.
     """
-    print(" Calculating everyone's RER...\n")
+    print(" Calculating everyone's required calories...\n")
+    
     # calories_data = []
-    for i in weight:
+    for i in weight_data:
         calories = i * 45
         calories_data.append(calories)
 
     return calories_data
 
 
-# def update_calories_worksheet(calories_data):
-#     """
-#     Updates calories worksheet with RER data from the calculate_calories
-#     function.
-#     """
-#     print(" Updating RER spreadsheet...\n")
-#     calories_worksheet = SHEET.worksheet("RER")
-#     calories_worksheet.append_row(calories_data)
-#     print(" Everyone's RER has been updated!\n")
-
-
-# def convert_weight_range_float(ideal_weight):
-    # """
-    # Takes the weight range values from the details worksheet and converts
-    # them into floats.
-    # """
-    # print("Retrieving residents' healthy weight range...")
-    # ideal_weight_list = [item.split(', ') for item in ideal_weight]
-    # ideal_weight_list_flat = [item for i in ideal_weight_list for item in i]
-    # ideal_weight_list_flat_float = [float(num) for num in ideal_weight_list_flat]
-
-    # ideal_weight_range = []
-    # for i in range(0, len(ideal_weight_list_flat_float), 2):
-    #     ideal_weight_range.append((ideal_weight_list_flat_float[i], ideal_weight_list_flat_float[i+1]))
+def get_recent_weight():
+    """
+    Retrieve values for residents' most recent weight from weight worksheet
+    and converts to floats.
+    """
+    weight_worksheet = SHEET.worksheet("weight").get_all_values()
+    recent_weight_data = weight_worksheet[-1]
+    print(recent_weight_data)
+    recent_weight_floats = [float(i) for i in recent_weight_data]
     
-    # return ideal_weight_range
+    return recent_weight_floats
 
-def ideal_weight_float(residents_ideal_weight):
+
+def convert_weight_floats(ideal_weight_data):
     """
     Converts the ideal weight values from the current residents worksheet
     to floats.
     """
-    print("converting values to floats")
-    ideal_weight_flts = []
-    float_weight = [float(i) for i in residents_ideal_weight]
-    ideal_weight_flts.append(float_weight)
+    print("converting values to floats\n")
+    # ideal_weight_floats = []
+    ideal_weight_floats = [float(i) for i in ideal_weight_data]
+    # ideal_weight_floats.append(float_weight)
     
-    print("ideal weight floats converted!")
+    print("ideal weight floats converted!\n")
+    print(ideal_weight_floats)
 
-    return ideal_weight_flts
+    return ideal_weight_floats
 
 
-def calculate_calories_multipliers(weight, ideal_weight):
+def calculate_multipliers(weight, ideal_weight):
     """
     Compares latest weight data against the ideal weight data and assigns
     the appropriate multiplier based on whether recorded weight is above the
@@ -160,37 +142,52 @@ def calculate_calories_multipliers(weight, ideal_weight):
     return calorie_multipliers
 
 
-def calculate_calories_required(calories_data, calorie_multipliers):
+def calculate_food_required(calorie_data, calorie_multipliers):
     """
     Calculates the calories required for each resident.
     """
     print("calculating calories")
     calories_required = []
-    for i, j in zip(calories_data, calorie_multipliers):
+    for i, j in zip(calorie_data, calorie_multipliers):
         calories = i * j
-    calories_required.append(calories)
-    print("calories_required")
+        calories_required.append(calories)
+    print(calories_required)
     print("calories calculated!")
-    input("testing")
+    return calories_required
+
+
+def display_food(residents, calories):
+    """
+    Displays the amount of food in grams each resident should get per meal,
+    presuming that 1 gram of food is equal to 1 calorie.
+    """
+    # clear()
+    print("This is the amount of food in grams each resident should get today.\n")
+    for i, j in zip(residents, calories):
+        print(f"{i}:\n{int(j)} grams -- ({int(math.floor(j / 2))} grams per meal).\n")
         
+    selection = input("Use any key to return to the main menu.\n")
+
+    if selection:
+        main()
+    else:
+        pass
 
 def weight_log_menu():
     weight_data = get_weight(residents_list)
-    # update_weight_worksheet(weight_data)
-    calculate_calories(weight_data)
-    # update_calories_worksheet(calories_data)
-    # convert_weight_range_float(residents_ideal_weight)
-    ideal_weight_float(residents_ideal_weight)
-    calculate_calories_multipliers(weight_data, ideal_weight_flts)
-    calculate_calories_required(calories_data, calculate_calories_multipliers)
+    update_weight_worksheet(weight_data)
 
 
 def food_calculator():
     """
     Displays the amount of calories each resident should be getting.
     """
-
-
+    recent_weight_floats = get_recent_weight()
+    calories_data = calculate_calories(recent_weight_floats)
+    ideal_weight_floats = convert_weight_floats(residents_ideal_weight)
+    calorie_multipliers = calculate_multipliers(recent_weight_floats, ideal_weight_floats)
+    required_calories = calculate_food_required(calories_data, calorie_multipliers)
+    display_food(residents_list, required_calories)
 
 
 def display_current_residents():
@@ -324,13 +321,13 @@ def add_new_resident():
 
     while True:
 
-        medical = input("Medical conditions (n/a if none):\n").strip().capitalize()
+        medical = input("Medical conditions:\n").strip().capitalize()
 
         if len(medical) == 0:
             print("Please provide an entry.\n")
             continue
 
-        if medical.isdigit():
+        if not medical.isalpha():
             print("Please provide a valid entry.\n")
             continue
 
@@ -363,7 +360,7 @@ def update_worksheets_new_resident(details):
     current_residents_worksheet = SHEET.worksheet("current residents")
     current_residents_worksheet.append_row(details)
     weight_worksheet = SHEET.worksheet("weight")
-    res_list_length = len(SHEET.worksheet("current residents").col_values(1))
+    res_list_length = len(weight_worksheet.row_values(1))
     weight_worksheet.update_cell(1, (res_list_length + 1), details[0])
     print("Directory updated!\n")
     selection = input("Use any key to return to the previous menu.\n")
@@ -467,6 +464,8 @@ def main():
 
 
 main()
+
+# get_recent_weight()
 
 # display_past_residents()
 
