@@ -245,7 +245,7 @@ def display_past_residents():
         pass
 
 
-def add_new_resident(field):
+def add_new_resident():
     """
     Loops through the data fields specified in new_resident_keys list,
     takes input data to create a new resident listing and appends to current
@@ -262,7 +262,7 @@ def add_new_resident(field):
             print("Please enter a valid name.\n")
             continue
 
-        if not isalpha(name):
+        if not name.isalpha():
             print("Please use only letters in the resident's name.")
             continue
 
@@ -276,7 +276,7 @@ def add_new_resident(field):
             age = int(age)
 
         except ValueError:
-            print("Please enter a valid age!\n")
+            print("Please enter a valid age.\n")
             continue
 
         new_resident_details.append(age)
@@ -299,29 +299,55 @@ def add_new_resident(field):
             print("Please provide an entry.\n")
             continue
 
-        if not isalpha(breed):
+        if not breed.isalpha():
             print("Please use only letters in the resident's breed.")
             continue
 
-        new_resident_details.append(breed)
+        else:
+            new_resident_details.append(breed)
+            break
 
-        # for i in field:
-        #     entry = input(f"{i}\n")
-            
-        #     new_resident_details.append(entry)
+    while True:
+        
+        print("Identify the ideal weight range and enter the median figure.\n")
+        print("e.g. If ideal weight range is between 4 and 5kg, enter 4.5.\n")
 
-            # return new_resident_details
+        try:
+            ideal_weight = float(input("Ideal weight:\n"))
             
-    print(" Thank you for entering the new resident's details. You entered:\n")
+        except ValueError:
+            print("Please enter a valid weight.\n")
+            continue
+
+        new_resident_details.append(ideal_weight)
+        break
+
+    while True:
+
+        medical = input("Medical conditions (n/a if none):\n").strip().capitalize()
+
+        if len(medical) == 0:
+            print("Please provide an entry.\n")
+            continue
+
+        if medical.isdigit():
+            print("Please provide a valid entry.\n")
+            continue
+
+        else:
+            new_resident_details.append(medical)
+            break
+            
+    print("Thank you for entering the new resident's details. You entered:\n")
     print(new_resident_details)
-    print(" If these details are correct, please use 'y' to upload to the directory.\n")
-    print(" If you made a mistake, please use 'n' to try again.\n")
-    selection = input(" Alternatively, please use 'x' to return to the previous menu.\n")
+    print("If these details are correct, please use 'y' to upload to the directory.\n")
+    print("If you made a mistake, please use 'n' to try again.\n")
+    selection = input("Alternatively, please use 'x' to return to the previous menu.\n")
 
     if selection == "y":
         update_worksheets_new_resident(new_resident_details)
     elif selection == "n":
-        add_new_resident(new_resident_keys)
+        add_new_resident()
     elif selection == "x":
         directory_menu()
     else:
@@ -331,13 +357,16 @@ def add_new_resident(field):
 def update_worksheets_new_resident(details):
     """
     Takes the data input by user in add_new_resident function and updates the
-    details, weight, food, and RER worksheets.
+    current residents and weight worksheets.
     """
-    print("Updating directory...")
+    print("Updating directory...\n")
     current_residents_worksheet = SHEET.worksheet("current residents")
     current_residents_worksheet.append_row(details)
+    weight_worksheet = SHEET.worksheet("weight")
+    res_list_length = len(SHEET.worksheet("current residents").col_values(1))
+    weight_worksheet.update_cell(1, (res_list_length + 1), details[0])
     print("Directory updated!\n")
-    selection = input(" Use any key to return to the previous menu.\n")
+    selection = input("Use any key to return to the previous menu.\n")
 
     if selection:
         directory_menu()
@@ -389,7 +418,7 @@ def directory_menu():
         elif selection == "2":
             display_past_residents()
         elif selection == "3":
-            add_new_resident(new_resident_keys)
+            add_new_resident()
         elif selection == "4":
             remove_resident(residents_list)
         elif selection == "5":
