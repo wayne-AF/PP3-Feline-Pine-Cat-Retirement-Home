@@ -79,8 +79,9 @@ calories_data = []
 def calculate_calories(weight_data):
     """
     Calculates the residents' Resting Energy Requirements (RER) - the calories
-    required - based on their latest weight readings. The general rule is that
-    a cat requires 45 calories per kg of bodyweight.
+    required - based on their latest weight data. For the purposes of this
+    project, I followed the general guideline that a cat requires 45 calories
+    per kg of bodyweight.
     """
     print(" Calculating everyone's required calories...\n")
     
@@ -173,6 +174,7 @@ def display_food(residents, calories):
     else:
         pass
 
+
 def weight_log_menu():
     weight_data = get_weight(residents_list)
     update_weight_worksheet(weight_data)
@@ -244,9 +246,8 @@ def display_past_residents():
 
 def add_new_resident():
     """
-    Loops through the data fields specified in new_resident_keys list,
-    takes input data to create a new resident listing and appends to current
-    residents worksheet.
+    Takes input data to create a new resident listing and appends to current
+    residents worksheet and weight worksheet.
     """
     clear()
     print(" * * Add Resident * * ")
@@ -334,7 +335,17 @@ def add_new_resident():
         else:
             new_resident_details.append(medical)
             break
-            
+    
+    while True:
+
+        try:
+            current_weight = float(input("Weight (in kg):\n"))
+            break
+        except ValueError:
+            print("Please enter a valid weight.\n")
+
+        return current_weight
+
     print("Thank you for entering the new resident's details. You entered:\n")
     print(new_resident_details)
     print("If these details are correct, please use 'y' to upload to the directory.\n")
@@ -343,6 +354,7 @@ def add_new_resident():
 
     if selection == "y":
         update_worksheets_new_resident(new_resident_details)
+        new_resident_weight_update(current_weight)
     elif selection == "n":
         add_new_resident()
     elif selection == "x":
@@ -371,27 +383,72 @@ def update_worksheets_new_resident(details):
         pass
 
 
-def remove_resident(list_of_names):
+def remove_resident_selection(list_of_names):
     """
-    Removes the selected resident's data from the details, weight, food, and
-    RER spreadsheets, and adds the resident's details to the past residents
-    spreadsheet. Also asks the user to update the resident's status as deceased
-    or adopted.
+    Removes the selected resident's data from the current and weight
+    worksheets and adds the data to the past residents worksheet. Also asks
+    the user to input a status for the resident, deceased or adopted.
     """
     clear()
-    print("Remove resident\n")
-    print(residents_list)
-    selection = input("Please enter the name of the resident checking out.\n").strip().capitalize()
+    print(" * * Remove resident * *\n")
+    print(list_of_names)
+    while True:
+        selection = input("Please enter the name of the resident checking out or use x to return to previous menu.\n").strip().capitalize()
+        
+        if selection == "X":
+            directory_menu()
 
-    if selection in residents_list:
-        confirm = input(f"Do you want to check out {selection}? y/n\n")
-        if confirm == "y":
-            reason = input("What is the reason for checking out?\n")
-        elif confirm == "n":
-            input("Please enter the name of the resident checking out.\n")
-    else:
-        input(f"{selection} is not in the current residents' directory! Please choose from the list of current residents.\n")
+        elif selection in list_of_names:
+            confirm = input(f"Do you want to check out {selection}? y/n\n")
+            if confirm == "x":
+                directory_menu()
+            elif confirm == "n":
+                continue
+                # input("Please choose from the list of current residents.\n").strip().capitalize()
+            elif confirm == "y":
+                reason = input("What is the reason for check out?\n").strip().capitalize()
+                print("Adopted, Deceased, Other?\n")
+                if reason not in ["Adopted", "Deceased", "Other"]:
+                    input("Please provide a valid reason for check out.\n").strip().capitalize()
+                    # continue
+                else:
+                    print(f"Checking out: {selection}\n")
+                    print(f"Reason: {reason}\n")
+                    proceed = input("Is this correct? y/n or use x to return to previous menu.\n")
+                    if proceed == "y":
+                        update_worksheets_remove_resident(selection, reason)
+                        break
+                    elif proceed == "n":
+                        continue
+                    elif proceed == "x":
+                        directory_menu()
+                    else:
+                        input("Please choose y, n or x.\n")
 
+            else:
+                input("Please select y or n or cancel with x.\n")
+                continue
+
+
+def update_worksheets_remove_resident(resident, status):
+    """
+    Takes the selected resident and selected reason from remove_resident_
+    selection function, removes the resident from current residents and
+    weight worksheets, and adds to past residents worksheet.
+    """
+    current_worksheet = SHEET.worksheet("current residents")
+    past_worksheet = SHEET.worksheet("past residents")
+    weight_worksheet = SHEET.worksheet("weight")
+    res_data_remove = current_worksheet.row_values(residents_list.index(resident) + 1)
+    current_worksheet.delete_rows(residents_list.index(resident) + 1)
+    weight_worksheet.delete_columns(residents_list.index(resident) + 1)
+    res_data_remove.pop(4)
+    res_data_remove.append(status)
+    past_worksheet.append_row(res_data_remove)
+    print("Directory updated!\n")
+    selection = input("Use any key to return to the main menu.\n")
+    if selection:
+        main()
 
 
 def directory_menu():
@@ -417,7 +474,7 @@ def directory_menu():
         elif selection == "3":
             add_new_resident()
         elif selection == "4":
-            remove_resident(residents_list)
+            remove_resident_selection(residents_list)
         elif selection == "5":
             main()
         else:
@@ -463,7 +520,8 @@ def main():
             input(" Please select from the options above:\n")
 
 
-main()
+# main()
+remove_resident_selection(residents_list)
 
 # get_recent_weight()
 
