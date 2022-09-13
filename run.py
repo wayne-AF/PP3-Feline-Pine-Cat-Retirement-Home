@@ -239,7 +239,7 @@ def display_current_residents():
         'medical': (current_residents_worksheet.col_values(6))
     }
     residents_data_chart = pd.DataFrame(current_residents, index=[residents_list])
-    print(residents_data_chart)
+    print(residents_data_chart, "\n")
 
     selection = input("Use any key to return to the previous menu.\n")
 
@@ -255,7 +255,7 @@ def display_past_residents():
     and displays it in a table.
     """
     clear()
-    print("Here are all of the past residents.")
+    print("Here are all of the past residents.\n")
     past_residents_worksheet = SHEET.worksheet("past residents")
     past_residents = {
         'age': (past_residents_worksheet.col_values(2)),
@@ -265,7 +265,7 @@ def display_past_residents():
         'status': (past_residents_worksheet.col_values(6))
     }
     past_residents_data_chart = pd.DataFrame(past_residents, index=[past_residents_list])
-    print(past_residents_data_chart)
+    print(past_residents_data_chart, "\n")
 
     selection = input(" Use any key to return to the previous menu.\n")
 
@@ -304,7 +304,7 @@ def add_new_resident():
     """
     clear()
     print(" * * Add Resident * *")
-    print("Enter the new resident's details below.")
+    print("Enter the new resident's details below.\n")
     new_resident_details = []
     while True:
 
@@ -337,7 +337,7 @@ def add_new_resident():
 
         sex = input("Sex (M/F):\n").strip().upper()
         if sex not in ["M", "F"]:
-            print("Please enter M or F.")
+            print("Please enter M or F.\n")
             continue
         else:
             new_resident_details.append(sex)
@@ -351,7 +351,7 @@ def add_new_resident():
             continue
 
         if not breed.isalpha():
-            print("Please use only letters in the resident's breed.")
+            print("Please use only letters in the resident's breed.\n")
             continue
 
         else:
@@ -400,7 +400,7 @@ def add_new_resident():
         return current_weight
 
     print("Thank you for entering the new resident's details. You entered:\n")
-    print(new_resident_details)
+    print(new_resident_details, "\n")
     print("If these details are correct, please use 'y' to upload to the directory.\n")
     print("If you made a mistake, please use 'n' to try again.\n")
     selection = input("Alternatively, please use 'x' to return to the previous menu.\n")
@@ -415,7 +415,7 @@ def add_new_resident():
         input("Please select from the options above.\n")
 
 
-def remove_resident_selection(list_of_names):
+def remove_resident_selection(residents):
     """
     Removes the selected resident's data from the current and weight
     worksheets and adds the data to the past residents worksheet. Also asks
@@ -423,14 +423,14 @@ def remove_resident_selection(list_of_names):
     """
     clear()
     print(" * * Remove resident * *\n")
-    print(list_of_names)
+    print(residents, "\n")
     while True:
         selection = input("Please enter the name of the resident checking out or use x to return to previous menu.\n").strip().capitalize()
         
         if selection == "X":
             directory_menu()
 
-        elif selection in list_of_names:
+        elif selection in residents:
             confirm = input(f"Do you want to check out {selection}? y/n\n")
             if confirm == "x":
                 directory_menu()
@@ -458,8 +458,8 @@ def remove_resident_selection(list_of_names):
                         input("Please choose y, n or x.\n")
 
             else:
-                input("Please select y or n or cancel with x.\n")
-                continue
+                input("Please select y/n or cancel with x.\n")
+                # continue
 
 
 def update_worksheets_remove_resident(resident, status):
@@ -486,6 +486,136 @@ def update_worksheets_remove_resident(resident, status):
             pass
 
 
+def update_resident_selection(residents):
+    """
+    Allows the user to select the resident whose details they wish to update.
+    """
+    clear()
+    print(" * * Update Resident Details * *\n")
+    print(residents, "\n")
+    while True:
+        selection = input("Please enter the name of the resident to update or use x to return to previous menu.\n").strip().capitalize()
+
+        if selection == "X":
+            directory_menu()
+
+        elif selection in residents:
+            confirm = input(f"Do you want to update {selection}'s details? y/n\n")
+            if confirm == "x":
+                directory_menu()
+            elif confirm == "n":
+                continue
+            elif confirm == "y":
+                update_resident_details(selection)
+                break
+            else:
+                input("Please select y/n or cancel with x.\n")
+
+
+def update_resident_details(resident):
+    """
+    Allows the user to update the details of the resident selected in the
+    update_resident_selection function.
+    """
+    clear()
+    weight = SHEET.worksheet("weight")
+    current = SHEET.worksheet("current residents")
+    row_index = residents_list.index(resident) + 1
+    row_values = current.row_values(residents_list.index(resident) +1)
+    details = ["name:", "age:", "sex:", "breed:", "ideal weight:", "medical:"]
+    for i, j in zip(details, row_values):
+        print(i, j)
+    print()
+    print("Please only use this menu to provide updated information for a resident.\n")
+    print("Do not use it to create a new resident.\n")
+    print("Enter 1 to change name.")
+    print("Enter 2 to change age.")
+    print("Enter 3 to change sex.")
+    print("Enter 4 to change breed.")
+    print("Enter 5 to change ideal weight.")
+    print("Enter 6 to change medical.\n")
+    print("Enter x to cancel and return to the previous menu.\n")
+
+    while True:
+        selection = input("Please select which details you want to change or x to cancel:\n").strip()
+
+        if selection == "x":
+            update_resident_selection(residents_list)
+        elif selection == "1":
+            name = input("Edit name:\n").strip().capitalize()
+            if len(name) == 0:
+                print("Please enter a valid name.\n")
+                continue
+            if not name.isalpha():
+                print("Please use only letters in the resident's name.\n")
+                continue
+            if name in residents_list:
+                print("That name is already taken. Please use a new name or new spelling.\n")
+                continue
+            
+            current.update_cell(row_index, 1, name)
+            weight.update_cell(1, row_index, name)
+            print("Name updated.\n")
+
+        elif selection == "2":
+            age = input("Edit age:\n").strip()
+            try: 
+                age = int(age)
+            except ValueError:
+                print("Please enter a valid age.\n")
+                continue
+            
+            current.update_cell(row_index, 2, age)
+            print("Age updated.\n")
+
+        elif selection == "3":
+            sex = input("Edit sex (M/F):\n").strip().upper()
+            if sex not in ["M", "F"]:
+                print("Please enter M or F.\n")
+                continue
+
+            current.update_cell(row_index, 3, sex)
+            print("Sex updated.\n")
+
+        elif selection == "4":
+            breed = input("Edit breed:\n").strip().capitalize()
+            if len(breed) == 0:
+                print("Please provide an entry.\n")
+                continue
+            if not breed.isalpha():
+                print("Please use only letters in the resident's breed.\n")
+                continue
+            
+            current.update_cell(row_index, 4, breed)
+            print("Breed updated.\n")
+
+        elif selection == "5":
+            try:
+                ideal_weight = float(input("Edit ideal weight:\n"))
+            except ValueError:
+                print("Please enter a valid weight.\n")
+                continue
+
+            current.update_cell(row_index, 5, ideal_weight)
+            print("Ideal weight updated.\n")
+
+        elif selection == "6":
+            while True:
+                medical = input("Edit medical conditions:\n").strip().capitalize()
+                if medical == "x":
+                    break
+                if len(medical) == 0:
+                    print("Please provide an entry.\n")
+                    continue
+                if not medical.isalpha():
+                    print("Please provide a valid entry.\n")
+                    continue
+                else:
+                    current.update_cell(row_index, 6, medical)
+                    print("Medical updated.\n")
+                    break
+
+
 def directory_menu():
     """
     Displays all options in the Resident Directory sub-menu.
@@ -498,7 +628,8 @@ def directory_menu():
         print("2. Past Residents Directory\n")
         print("3. Add New Resident\n")
         print("4. Remove Resident\n")
-        print("5. Return to Main Menu\n")
+        print("5. Update Resident Details\n")
+        print("6. Return to Main Menu\n")
 
         selection = input("Please make your selection:\n")
 
@@ -511,6 +642,8 @@ def directory_menu():
         elif selection == "4":
             remove_resident_selection(residents_list)
         elif selection == "5":
+            update_resident_selection(residents_list)
+        elif selection == "6":
             main()
         else:
             input("Please select from the options above:\n")
@@ -555,7 +688,8 @@ def main():
             input("Please select from the options above:\n")
 
 
-main()
+update_resident_selection(residents_list)
+# main()
 # remove_resident_selection(residents_list)
 # weight_log_menu()
 # display_recent_weight()
