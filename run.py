@@ -1,9 +1,9 @@
+import math
 import gspread
 from google.oauth2.service_account import Credentials
 from pprint import pprint
 import pandas as pd
-import math
-import numpy as np
+# import numpy as np
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -17,11 +17,7 @@ GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('feline_pine_cat_retirement_home')
 
 
-residents_list = SHEET.worksheet("current residents").col_values(1)
-past_residents_list = SHEET.worksheet("past residents").col_values(1)
-residents_ideal_weight = SHEET.worksheet("current residents").col_values(5)
-recent_weight_data = SHEET.worksheet("weight").row_values
-
+fields = ["name:", "age:", "sex:", "breed:", "ideal weight:", "medical:", "current weight:"]
 
 def clear():
     """
@@ -59,8 +55,8 @@ def update_weight_worksheet(weight):
     Updates weight worksheet with weight-data from the get_weight function.
     """
     print("Updating weight spreadsheet...\n")
-    weight_worksheet = SHEET.worksheet("weight")
-    weight_worksheet.append_row(weight)
+    weight = SHEET.worksheet("weight")
+    weight.append_row(weight)
     print("Purrfect! Thank you for updating everyone's weight!\n")
 
     while True:
@@ -74,29 +70,24 @@ def display_recent_weight():
     Displays the most recent weight entries in order to keep track of weight
     gain or weight loss.
     """
-    
     weight = SHEET.worksheet("weight")
-    # column = weight.col_values(3)
-    # print(column)
-    # input("do something")
-    
     columns = []
     row_length = len(weight.row_values(1)) + 1
     for ind in range(1, row_length):
         column = weight.col_values(ind)
         columns.append(column[-5:])
-    # pprint(columns)
     residents = weight.row_values(1)
     for i, j in zip(residents, columns):
         print(f"{i}'s last five weight readings:")
         print(j)
         print()
 
-    selection = input("Use any key to return to the previous menu.\n")
-    if selection:
-        weight_log_menu()
-    else:
-        pass
+    print("Use enter key to return to the previous menu.\n")
+    # selection = input("Use any key to return to the previous menu.\n")
+    # if selection:
+    #     weight_log_menu()
+    # else:
+    #     pass
             
 
 def calculate_calories(weight_data):
@@ -178,13 +169,8 @@ def display_food(residents, calories):
     for i, j in zip(residents, calories):
         print(f"{i}:\n{int(j)} grams -- ({int(math.floor(j / 2))} grams per meal).\n")
         
-    selection = input("Use any key to return to the main menu.\n")
-
-    if selection:
-        main()
-    else:
-        pass
-
+    input("Use the enter key to return to the previous menu.\n")
+    
 
 def weight_log_menu():
     """
@@ -201,7 +187,8 @@ def weight_log_menu():
         selection = input("Please make your selection:\n")
 
         if selection == "1":
-            weight_data = get_weight(residents_list)
+            res_list = SHEET.worksheet("current residents").col_values(1)
+            weight_data = get_weight(res_list)
             update_weight_worksheet(weight_data)
             # get_weight(residents_list)
         elif selection == "2":
@@ -218,10 +205,12 @@ def food_calculator():
     """
     recent_weight_floats = get_recent_weight()
     calories_data = calculate_calories(recent_weight_floats)
-    ideal_weight_floats = convert_weight_floats(residents_ideal_weight)
+    res_ideal_weight = SHEET.worksheet("current residents").col_values(5)
+    ideal_weight_floats = convert_weight_floats(res_ideal_weight)
     calorie_multipliers = calculate_multipliers(recent_weight_floats, ideal_weight_floats)
     required_calories = calculate_food_required(calories_data, calorie_multipliers)
-    display_food(residents_list, required_calories)
+    res_list = SHEET.worksheet("current residents").col_values(1)
+    display_food(res_list, required_calories)
 
 
 def display_current_residents():
@@ -240,15 +229,16 @@ def display_current_residents():
         'ideal weight(+/- 0.5)': (current.col_values(5)),
         'medical': (current.col_values(6))
     }
-    residents_data_chart = pd.DataFrame(current_residents, index=[res_list])
-    print(residents_data_chart, "\n")
+    res_data_chart = pd.DataFrame(current_residents, index=[res_list])
+    print(res_data_chart, "\n")
 
-    selection = input("Use any key to return to the previous menu.\n")
+    input("Use the enter key to return to the previous menu.\n")
+    # selection = input("Use any key to return to the previous menu.\n")
 
-    if selection:
-        directory_menu()
-    else:
-        pass
+    # if selection:
+    #     directory_menu()
+    # else:
+    #     pass
 
 
 def display_past_residents():
@@ -258,23 +248,25 @@ def display_past_residents():
     """
     clear()
     print("Here are all of the past residents.\n")
-    past_residents_worksheet = SHEET.worksheet("past residents")
+    past_res = SHEET.worksheet("past residents")
+    past_res_list = past_res.col_values(1)
     past_residents = {
-        'age': (past_residents_worksheet.col_values(2)),
-        'sex': (past_residents_worksheet.col_values(3)),
-        'breed': (past_residents_worksheet.col_values(4)),
-        'medical': (past_residents_worksheet.col_values(5)),
-        'status': (past_residents_worksheet.col_values(6))
+        'age': (past_res.col_values(2)),
+        'sex': (past_res.col_values(3)),
+        'breed': (past_res.col_values(4)),
+        'medical': (past_res.col_values(5)),
+        'status': (past_res.col_values(6))
     }
-    past_residents_data_chart = pd.DataFrame(past_residents, index=[past_residents_list])
-    print(past_residents_data_chart, "\n")
+    past_res_data_chart = pd.DataFrame(past_residents, index=[past_res_list])
+    print(past_res_data_chart, "\n")
 
-    selection = input(" Use any key to return to the previous menu.\n")
+    input("Use the enter key to return to the previous menu.\n")
+    # selection = input(" Use any key to return to the previous menu.\n")
 
-    if selection:
-        directory_menu()
-    else:
-        pass
+    # if selection:
+    #     directory_menu()
+    # else:
+    #     pass
 
 
 def update_worksheets_new_resident(details, weight):
@@ -283,20 +275,21 @@ def update_worksheets_new_resident(details, weight):
     current residents and weight worksheets.
     """
     print("Updating directory...\n")
-    current_residents_worksheet = SHEET.worksheet("current residents")
-    current_residents_worksheet.append_row(details)
+    current = SHEET.worksheet("current residents")
+    current.append_row(details)
     weight_worksheet = SHEET.worksheet("weight")
     res_list_length = len(weight_worksheet.row_values(1))
     weight_worksheet.update_cell(1, (res_list_length + 1), details[0])
     col_length = len(weight_worksheet.col_values(1))
     weight_worksheet.update_cell(col_length, (res_list_length + 1), weight)
     print("Directory updated!\n")
-    selection = input("Use any key to return to the previous menu.\n")
+    input("Use the enter key to return to the previous menu.\n")
+    # selection = input("Use any key to return to the previous menu.\n")
 
-    if selection:
-        directory_menu()
-    else:
-        pass
+    # if selection:
+    #     directory_menu()
+    # else:
+    #     pass
 
 
 def add_new_resident():
@@ -307,7 +300,7 @@ def add_new_resident():
     clear()
     print(" * * Add Resident * *\n")
     print("Enter the new resident's details below.\n")
-    new_resident_details = []
+    new_res_details = []
     while True:
 
         name = input("Name:\n").strip().capitalize()
@@ -319,7 +312,7 @@ def add_new_resident():
             print("Please use only letters in the resident's name.\n")
             continue
 
-        new_resident_details.append(name)
+        new_res_details.append(name)
         break
 
     while True:
@@ -332,7 +325,7 @@ def add_new_resident():
             print("Please enter a valid age.\n")
             continue
 
-        new_resident_details.append(age)
+        new_res_details.append(age)
         break
 
     while True:
@@ -342,7 +335,7 @@ def add_new_resident():
             print("Please enter M or F.\n")
             continue
         else:
-            new_resident_details.append(sex)
+            new_res_details.append(sex)
             break
 
     while True:
@@ -357,7 +350,7 @@ def add_new_resident():
             continue
 
         else:
-            new_resident_details.append(breed)
+            new_res_details.append(breed)
             break
 
     while True:
@@ -372,7 +365,7 @@ def add_new_resident():
             print("Please enter a valid weight.\n")
             continue
 
-        new_resident_details.append(ideal_weight)
+        new_res_details.append(ideal_weight)
         break
 
     while True:
@@ -383,39 +376,70 @@ def add_new_resident():
             print("Please provide an entry.\n")
             continue
 
-        if not medical.isalpha():
+        if medical.isdigit():
             print("Please provide a valid entry.\n")
             continue
 
         else:
-            new_resident_details.append(medical)
+            new_res_details.append(medical)
             break
     
     while True:
 
         try:
             current_weight = float(input("Weight (in kg):\n"))
-            break
+
         except ValueError:
             print("Please enter a valid weight.\n")
+            continue
 
-        # return current_weight
+        new_res_details.append(current_weight)
+        break
 
     print("Thank you for entering the new resident's details. You entered:\n")
-    print(new_resident_details, current_weight, "\n")
-    print("If these details are correct, please use 'y' to upload to the directory.\n")
-    print("If you made a mistake, please use 'n' to try again.\n")
-    selection = input("Alternatively, please use 'x' to return to the previous menu.\n")
+    
+    display_entered_details(fields, new_res_details)
+    # pprint(new_res_details)
+    # print("If these details are correct, please use 'y' to upload to the directory.\n")
+    # print("If you made a mistake, please use 'n' to try again.\n")
+    # selection = input("Alternatively, please use 'x' to return to the previous menu.\n")
+
+    # if selection == "y":
+    #     update_worksheets_new_resident(new_res_details, current_weight)
+    # elif selection == "n":
+    #     add_new_resident()
+    # elif selection == "x":
+    #     directory_menu()
+    # else:
+    #     input("Please select from the options above.\n")
+
+
+def display_entered_details(field, details):
+    """
+    Displays the details the user has entered when entering a new resident into
+    the directory and updates worksheets if correct.
+    """
+    # while True:
+    for i, j in zip(field, details):
+        print(i, j)
+    print()
+    print("If these details are correct, use 'y' to upload to the directory.\n")
+    print("If you made a mistake, use 'n' to try again.\n")
+    current_weight = details.pop(6)
+    # new_details = details
+    # print(new_details)
+    # print(current_weight)
+    selection = input("Alternatively, use 'x' to return to the previous menu.\n")
 
     if selection == "y":
-        update_worksheets_new_resident(new_resident_details, current_weight)
+        update_worksheets_new_resident(details, current_weight)
     elif selection == "n":
         add_new_resident()
     elif selection == "x":
         directory_menu()
     else:
         input("Please select from the options above.\n")
-
+    
 
 def remove_resident_selection():
     """
@@ -474,37 +498,41 @@ def update_worksheets_remove_resident(resident, status):
     """
     # res_list = current.col_values(1)
     current = SHEET.worksheet("current residents")
+    res_list = current.col_values(1)
     past = SHEET.worksheet("past residents")
     weight = SHEET.worksheet("weight")
-    res_data_remove = current.row_values(residents_list.index(resident) + 1)
-    current.delete_rows(residents_list.index(resident) + 1)
-    weight.delete_columns(residents_list.index(resident) + 1)
+    res_data_remove = current.row_values(res_list.index(resident) + 1)
+    current.delete_rows(res_list.index(resident) + 1)
+    weight.delete_columns(res_list.index(resident) + 1)
     res_data_remove.pop(4)
     res_data_remove.append(status)
     past.append_row(res_data_remove)
     print("Directory updated!\n")
-    while True:
-        selection = input("Use any key to return to the main menu.\n")
-        if selection:
-            main()
-        else:
-            pass
+    input("Use the enter key to return to the previous menu.\n")
+    # while True:
+    #     selection = input("Use any key to return to the main menu.\n")
+    #     if selection:
+    #         main()
+    #     else:
+    #         pass
 
 
-def update_resident_selection(residents):
+def update_resident_selection():
     """
     Allows the user to select the resident whose details they wish to update.
     """
     clear()
     print(" * * Update Resident Details * *\n")
-    print(residents, "\n")
+    current = SHEET.worksheet("current residents")
+    res_list = current.col_values(1)
+    print(res_list, "\n")
     while True:
         selection = input("Please enter the name of the resident to update or use x to return to previous menu.\n").strip().capitalize()
 
         if selection == "X":
             directory_menu()
 
-        elif selection in residents:
+        elif selection in res_list:
             confirm = input(f"Do you want to update {selection}'s details? y/n\n")
             if confirm == "x":
                 directory_menu()
@@ -525,8 +553,9 @@ def update_resident_details(resident):
     clear()
     weight = SHEET.worksheet("weight")
     current = SHEET.worksheet("current residents")
-    row_index = residents_list.index(resident) + 1
-    row_values = current.row_values(residents_list.index(resident) +1)
+    res_list = current.col_values(1)
+    row_index = res_list.index(resident) + 1
+    row_values = current.row_values(res_list.index(resident) +1)
     details = ["name:", "age:", "sex:", "breed:", "ideal weight:", "medical:"]
     for i, j in zip(details, row_values):
         print(i, j)
@@ -544,7 +573,7 @@ def update_resident_details(resident):
         selection = input("Please select which details you want to change or x to cancel:\n").strip()
 
         if selection == "x":
-            update_resident_selection(residents_list)
+            update_resident_selection()
         elif selection == "1":
             name = input("Edit name:\n").strip().capitalize()
             if len(name) == 0:
@@ -553,7 +582,7 @@ def update_resident_details(resident):
             if not name.isalpha():
                 print("Please use only letters in the resident's name.\n")
                 continue
-            if name in residents_list:
+            if name in res_list:
                 print("That name is already taken. Please use a new name or new spelling.\n")
                 continue
             
@@ -646,7 +675,7 @@ def directory_menu():
         elif selection == "4":
             remove_resident_selection()
         elif selection == "5":
-            update_resident_selection(residents_list)
+            update_resident_selection()
         elif selection == "6":
             main()
         else:
@@ -695,11 +724,3 @@ def main():
 
 
 main()
-# update_resident_selection(residents_list)
-# remove_resident_selection()
-# weight_log_menu()
-# display_recent_weight()
-
-# get_recent_weight()
-
-# display_past_residents()
