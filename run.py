@@ -694,8 +694,8 @@ def main():
             continue
 
 
-# update_resident_selection(residents_list)
 main()
+# update_resident_selection(residents_list)
 # remove_resident_selection()
 # weight_log_menu()
 # display_recent_weight()
@@ -703,20 +703,3 @@ main()
 # get_recent_weight()
 
 # display_past_residents()
-
-# while True:
-#         clear()
-#         print("These are all of the current residents.\n")
-#         details_worksheet = SHEET.worksheet("details")
-#         all_res_dict = np.array(details_worksheet.get_all_values())
-        
-#         print(all_res_dict)
-#         (print("Use 'x' to return to the previous menu.\n"))
-#         selection = input("Use 'm' to return to the main menu.\n")
-
-#         if selection == "x":
-#             directory_menu()
-#         elif selection == "m":
-#             main()
-#         else:
-#             input(" Please select from the options above.\n")
