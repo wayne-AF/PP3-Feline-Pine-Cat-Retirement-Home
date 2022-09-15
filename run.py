@@ -70,6 +70,7 @@ def display_recent_weight():
     Displays the most recent weight entries in order to keep track of weight
     gain or weight loss.
     """
+    clear()
     print("Retrieving everyone's data...")
     weight_worksheet = SHEET.worksheet("weight")
     columns = []
@@ -164,7 +165,6 @@ def display_food(residents, calories):
     for i, j in zip(residents, calories):
         print(f"{i}:\n{int(j)} grams -- ({int(math.floor(j / 2))} grams per "
               "meal).\n")
-
     input("Use the enter key to return to the previous menu.\n")
 
 
@@ -278,10 +278,14 @@ def add_new_resident():
     clear()
     print(" * * Add Resident * *\n")
     print("Enter the new resident's details below.\n")
+    print("Use x at any time to exit and return to the previous menu.\n")
     new_res_details = []
     while True:
 
         name = input("Name:\n").strip().capitalize()
+        if name == "X":
+            directory_menu()
+
         if len(name) == 0:
             print("Please enter a valid name.\n")
             continue
@@ -296,6 +300,9 @@ def add_new_resident():
     while True:
 
         age = input("Age:\n").strip()
+        if age == "x":
+            directory_menu()
+
         try:
             age = int(age)
 
@@ -309,6 +316,9 @@ def add_new_resident():
     while True:
 
         sex = input("Sex (M/F):\n").strip().upper()
+        if sex == "X":
+            directory_menu()
+
         if sex not in ["M", "F"]:
             print("Please enter M or F.\n")
             continue
@@ -319,6 +329,9 @@ def add_new_resident():
     while True:
 
         breed = input("Breed:\n").strip().capitalize()
+        if breed == "X":
+            directory_menu()
+
         if len(breed) == 0:
             print("Please provide an entry.\n")
             continue
@@ -336,8 +349,12 @@ def add_new_resident():
         print("Identify the ideal weight range and enter the median figure.\n")
         print("e.g. If ideal weight range is between 4 and 5kg, enter 4.5.\n")
 
+        ideal_weight = input("Ideal weight:\n").strip()
+        if ideal_weight == "x":
+            directory_menu()
+
         try:
-            ideal_weight = float(input("Ideal weight:\n"))
+            ideal_weight = float(ideal_weight)
 
         except ValueError:
             print("Please enter a valid weight.\n")
@@ -349,6 +366,8 @@ def add_new_resident():
     while True:
 
         medical = input("Medical conditions:\n").strip().capitalize()
+        if medical == "X":
+            directory_menu()
 
         if len(medical) == 0:
             print("Please provide an entry.\n")
@@ -364,8 +383,12 @@ def add_new_resident():
 
     while True:
 
+        current_weight = input("Weight (in kg):\n").strip()
+        if current_weight == "x":
+            directory_menu()
+
         try:
-            current_weight = float(input("Weight (in kg):\n"))
+            current_weight = float(current_weight)
 
         except ValueError:
             print("Please enter a valid weight.\n")
@@ -539,6 +562,9 @@ def update_resident_details(resident):
             update_resident_selection()
         elif selection == "1":
             name = input("Edit name:\n").strip().capitalize()
+            
+            if name == "X":
+                update_resident_selection()
             if len(name) == 0:
                 print("Please enter a valid name.\n")
                 continue
@@ -556,6 +582,8 @@ def update_resident_details(resident):
 
         elif selection == "2":
             age = input("Edit age:\n").strip()
+            if age == "x":
+                update_resident_selection()
             try:
                 age = int(age)
             except ValueError:
@@ -567,6 +595,8 @@ def update_resident_details(resident):
 
         elif selection == "3":
             sex = input("Edit sex (M/F):\n").strip().upper()
+            if sex == "X":
+                update_resident_selection()
             if sex not in ["M", "F"]:
                 print("Please enter M or F.\n")
                 continue
@@ -576,6 +606,8 @@ def update_resident_details(resident):
 
         elif selection == "4":
             breed = input("Edit breed:\n").strip().capitalize()
+            if breed == "X":
+                update_resident_selection()
             if len(breed) == 0:
                 print("Please provide an entry.\n")
                 continue
@@ -587,8 +619,11 @@ def update_resident_details(resident):
             print("Breed updated.\n")
 
         elif selection == "5":
+            ideal_weight = input("Edit ideal weight:\n").strip()
+            if ideal_weight == "x":
+                update_resident_selection()
             try:
-                ideal_weight = float(input("Edit ideal weight:\n"))
+                ideal_weight = float(ideal_weight)
             except ValueError:
                 print("Please enter a valid weight.\n")
                 continue
@@ -600,8 +635,8 @@ def update_resident_details(resident):
             while True:
                 medical = input("Edit medical conditions:"
                                 "\n").strip().capitalize()
-                if medical == "x":
-                    break
+                if medical == "X":
+                    update_resident_selection()
                 if len(medical) == 0:
                     print("Please provide an entry.\n")
                     continue
@@ -689,3 +724,4 @@ def main():
 
 
 main()
+
