@@ -81,7 +81,7 @@ def display_recent_weight():
     residents = weight_worksheet.row_values(1)
     for i, j in zip(residents, columns):
         print(f"{i}'s latest weight readings:")
-        print(j, "\n")
+        print(', '.join(map(str, j)), "\n")
 
     input("Use the enter key to return to the previous menu.\n")
 
@@ -215,7 +215,7 @@ def display_current_residents():
     worksheet and displays it in a table.
     """
     clear()
-    print("Here are all of the current residents.")
+    print("Here are all of the current residents.\n")
     current = SHEET.worksheet("current residents")
     res_list = current.col_values(1)
     current_residents = {
@@ -437,10 +437,11 @@ def remove_resident_selection():
     current = SHEET.worksheet("current residents")
     res_list = current.col_values(1)
     print(" * * Remove resident * *\n")
-    print(res_list, "\n")
+    print(', '.join(res_list))
+    print()
     while True:
         selection = input("Please enter the name of the resident checking "
-                          "out or use x to return to previous"
+                          "out or use x to return to the previous "
                           "menu.\n").strip().capitalize()
 
         if selection == "X":
@@ -701,7 +702,7 @@ def main():
 
         print("Welcome to the Feline Pine management system.\n")
         print("Please select from the options below.\n")
-        print("1. Resident Directory Management\n")
+        print("1. Resident Directory Menu\n")
         print("2. Weight Log Menu\n")
         print("3. Food Calculator\n")
         print("4. Exit Management System\n")
