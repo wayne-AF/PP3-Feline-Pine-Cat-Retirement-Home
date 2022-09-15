@@ -45,7 +45,7 @@ def get_weight():
             weight = input(f"Enter {i}'s weight:\n").strip()
             if weight == "x":
                 weight_log_menu()
-            
+
             try:
                 weight = float(weight)
                 break
@@ -414,7 +414,7 @@ def display_entered_details(field, details):
     for i, j in zip(field, details):
         print(i, j)
     print()
-    print("If these details are correct, use 'y' to upload to the"
+    print("If these details are correct, use 'y' to upload to the "
           "directory.\n")
     print("If you made a mistake, use 'n' to try again.\n")
     current_weight = details.pop(6)
@@ -440,6 +440,7 @@ def remove_resident_selection():
     current = SHEET.worksheet("current residents")
     res_list = current.col_values(1)
     print(" * * Remove resident * *\n")
+    print("Current residents:\n")
     print(', '.join(res_list))
     print()
     print("Enter the name of the resident you wish to check out.\n")
@@ -511,11 +512,12 @@ def update_resident_selection():
     print(" * * Update Resident Details * *\n")
     current = SHEET.worksheet("current residents")
     res_list = current.col_values(1)
+    print("Current residents:\n")
     print(', '.join(res_list))
     print()
+    print("Enter the name of the resident you wish to update.\n")
     while True:
-        selection = input("Please enter the name of the resident to "
-                          "update or use x to return to the previous "
+        selection = input("Use 'x' to return to the previous "
                           "menu.\n").strip().capitalize()
 
         if selection == "X":
@@ -730,4 +732,3 @@ def main():
 
 
 main()
-
