@@ -39,7 +39,7 @@ def get_weight():
     print(" * * Weight Log * *\n")
     print("Update residents' weight here.\n")
     print("The entry should be in kilograms.\n")
-    print("Use x at any time to return to the previous menu.\n")
+    print("Use 'x' at any time to return to the previous menu.\n")
     for i in residents:
         while True:
             weight = input(f"Enter {i}'s weight:\n").strip()
@@ -75,7 +75,7 @@ def display_recent_weight():
     gain or weight loss.
     """
     clear()
-    print("Retrieving everyone's data...\n")
+    print(" * * Recent Weight Data * *\n")
     weight_worksheet = SHEET.worksheet("weight")
     columns = []
     row_length = len(weight_worksheet.row_values(1)) + 1
@@ -92,10 +92,9 @@ def display_recent_weight():
 
 def calculate_calories(weight_data):
     """
-    Calculates the residents' Resting Energy Requirements (RER) - the calories
-    required - based on their latest weight data. For the purposes of this
-    project, I followed the general guideline that a cat requires 45 calories
-    per kg of bodyweight.
+    Calculates the residents' required calories based on their latest weight
+    data. For the purposes of this project, I followed the general guideline
+    that a cat requires 45 calories per kg of bodyweight.
     """
     calories_data = []
     for i in weight_data:
@@ -165,6 +164,7 @@ def display_food(residents, calories):
     presuming that 1 gram of food is equal to 1 calorie.
     """
     clear()
+    print(" * * Daily Food Calculator * *")
     print("This is the amount of food each resident should get today.\n")
     for i, j in zip(residents, calories):
         print(f"{i}:\n{int(j)} grams -- ({int(math.floor(j / 2))} grams per "
@@ -282,7 +282,7 @@ def add_new_resident():
     clear()
     print(" * * Add Resident * *\n")
     print("Enter the new resident's details below.\n")
-    print("Use x at any time to exit and return to the previous menu.\n")
+    print("Use 'x' at any time to exit and return to the previous menu.\n")
     new_res_details = []
     while True:
 
@@ -418,8 +418,7 @@ def display_entered_details(field, details):
           "directory.\n")
     print("If you made a mistake, use 'n' to try again.\n")
     current_weight = details.pop(6)
-    selection = input("Alternatively, use 'x' to return to the previous"
-                      "menu.\n")
+    selection = input("Use 'x' to return to the previous menu.\n")
 
     if selection == "y":
         update_worksheets_new_resident(details, current_weight)
@@ -443,10 +442,9 @@ def remove_resident_selection():
     print(" * * Remove resident * *\n")
     print(', '.join(res_list))
     print()
+    print("Enter the name of the resident you wish to check out.\n")
     while True:
-        selection = input("Please enter the name of the resident checking "
-                          "out or use x to return to the previous "
-                          "menu.\n").strip().capitalize()
+        selection = input("Use 'x' at any time to return to the previous menu.\n").strip().capitalize()
 
         if selection == "X":
             directory_menu()
@@ -461,14 +459,16 @@ def remove_resident_selection():
                 print("What is the reason for check out?\n")
                 reason = input("Adopted, Deceased, "
                                "Other?\n").strip().capitalize()
-                if reason not in ["Adopted", "Deceased", "Other"]:
+                if reason == "X":
+                    directory_menu()
+                elif reason not in ["Adopted", "Deceased", "Other"]:
                     input("Please provide a valid reason for check out."
                           "\n").strip().capitalize()
                 else:
                     print(f"Checking out: {selection}\n")
                     print(f"Reason: {reason}\n")
                     proceed = input("Is this correct? y/n or use x to return "
-                                    "to previous menu.\n")
+                                    "to previous menu.\n").strip()
                     if proceed == "y":
                         update_worksheets_remove_resident(selection, reason)
                         break
