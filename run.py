@@ -71,7 +71,7 @@ def display_recent_weight():
     gain or weight loss.
     """
     clear()
-    print("Retrieving everyone's data...")
+    print("Retrieving everyone's data...\n")
     weight_worksheet = SHEET.worksheet("weight")
     columns = []
     row_length = len(weight_worksheet.row_values(1)) + 1
