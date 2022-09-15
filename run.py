@@ -2,7 +2,6 @@ import math
 import gspread
 from google.oauth2.service_account import Credentials
 import pandas as pd
-# import numpy as np
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -37,16 +36,21 @@ def get_weight():
     weight_worksheet = SHEET.worksheet("weight")
     residents = weight_worksheet.row_values(1)
     weight_data = []
-    print(" * * Weight Log Section * *\n")
+    print(" * * Weight Log * *\n")
     print("Update residents' weight here.\n")
     print("The entry should be in kilograms.\n")
+    print("Use x at any time to return to the previous menu.\n")
     for i in residents:
         while True:
+            weight = input(f"Enter {i}'s weight:\n").strip()
+            if weight == "x":
+                weight_log_menu()
+            
             try:
-                weight = float(input(f"Enter {i}'s weight:\n"))
+                weight = float(weight)
                 break
             except ValueError:
-                print("That is not a valid entry! Please enter a valid"
+                print("That is not a valid entry! Please enter a valid "
                       "weight.\n")
 
         weight_data.append(weight)
@@ -507,10 +511,11 @@ def update_resident_selection():
     print(" * * Update Resident Details * *\n")
     current = SHEET.worksheet("current residents")
     res_list = current.col_values(1)
-    print(res_list, "\n")
+    print(', '.join(res_list))
+    print()
     while True:
-        selection = input("Please enter the name of the resident to"
-                          "update or use x to return to previous"
+        selection = input("Please enter the name of the resident to "
+                          "update or use x to return to the previous "
                           "menu.\n").strip().capitalize()
 
         if selection == "X":
@@ -545,7 +550,7 @@ def update_resident_details(resident):
     for i, j in zip(details, row_values):
         print(i, j)
     print()
-    print("Please only use this menu to provide updated information for a"
+    print("Please only use this menu to provide updated information for a "
           "resident.\n")
     print("Do not use it to create a new resident.\n")
     print("Enter 1 to change name.")
@@ -556,14 +561,14 @@ def update_resident_details(resident):
     print("Enter 6 to change medical.\n")
 
     while True:
-        selection = input("Please select which details you want to change or x"
+        selection = input("Please select which details you want to change or x "
                           "to cancel:\n").strip()
 
         if selection == "x":
             update_resident_selection()
         elif selection == "1":
             name = input("Edit name:\n").strip().capitalize()
-            
+
             if name == "X":
                 update_resident_selection()
             if len(name) == 0:
@@ -657,7 +662,7 @@ def directory_menu():
     while True:
         clear()
         print("* * Resident Directory Menu * *\n")
-        print("Please select from the options below.\n")
+        print("Select from the options below.\n")
         print("1. Current Residents Directory\n")
         print("2. Past Residents Directory\n")
         print("3. Add New Resident\n")
