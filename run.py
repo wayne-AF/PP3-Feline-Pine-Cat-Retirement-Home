@@ -445,7 +445,8 @@ def remove_resident_selection():
     print()
     print("Enter the name of the resident you wish to check out.\n")
     while True:
-        selection = input("Use 'x' at any time to return to the previous menu.\n").strip().capitalize()
+        selection = input("Use 'x' at any time to return to the previous menu."
+                          "\n").strip().capitalize()
 
         if selection == "X":
             directory_menu()
@@ -563,8 +564,8 @@ def update_resident_details(resident):
     print("Enter 6 to change medical.\n")
 
     while True:
-        selection = input("Please select which details you want to change or x "
-                          "to cancel:\n").strip()
+        selection = input("Please select which details you want to change or "
+                          "'x' to cancel:\n").strip()
 
         if selection == "x":
             update_resident_selection()
