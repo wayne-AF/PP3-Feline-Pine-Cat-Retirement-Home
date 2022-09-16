@@ -1,13 +1,13 @@
 # Feline Pine Cat Retirement Home
 
 
-![Feline Pine Cat Retirement Home Management System app](https://feline-pine-retirement-home.herokuapp.com/)
+[Feline Pine Cat Retirement Home Management System app](https://feline-pine-retirement-home.herokuapp.com/)
 ## About
 The Feline Pine Cat Retirement Home Management System is a command line application for the staff and volunteers at a fictional cat rescue centre. 
 
 It allows users to view current and past cats, add and remove cats, edit their details, input daily weight measurements, and retrieve recommended daily food portions depending on their weight.
 
-The data is stored in and accessed from an external ![Google spreadsheet](https://docs.google.com/spreadsheets/d/1lRe6DBT5WJAMoScPgmB7hlruGzHB4QdtOT1pqweaGos/edit?usp=sharing)
+The data is stored in and accessed from an external [Google spreadsheet](https://docs.google.com/spreadsheets/d/1lRe6DBT5WJAMoScPgmB7hlruGzHB4QdtOT1pqweaGos/edit?usp=sharing)
 
 ## Index - Table of Contents
 User Experience
@@ -195,7 +195,7 @@ To edit the website's code and push it to the repository, the following steps sh
 4. Under 'General access', change 'Restricted' to 'Anyone with the link'.
 5. The link can be copied from the 'Copy link' button and shared with whoever you wish to be able to access the spreadsheet. 
 #### Setting up APIs:
-1. Navigate to ![Google Cloud](https://cloud.google.com/).
+1. Navigate to [Google Cloud](https://cloud.google.com/).
 2. Create a new project and give it a unique name. Select the project to go to the project page. 
 3. Select the APIs & Services from the side menu.
 4. Select library. 
@@ -241,7 +241,7 @@ SHEET = GSPREAD_CLIENT.open('Google spreadsheets name goes here')
 ### Deploying to Heroku
 1. For successful deployment to Heroku, the dependencies information must be added to the requirement.txt file in the project workspace. 
 2. In the terminal, type 'pip3 freeze > requirements.txt'. Hitting enter will update the requirements.txt file. Commit and push the changes.
-3. Navigate to ![Heroku](https://www.heroku.com).
+3. Navigate to [Heroku](https://www.heroku.com).
 4. Sign in or create an account if necessary. 
 5. From the Heroku dashboard, create a new app. 
 6. Enter a unique name for the app and select region, then click 'Create App'.
