@@ -10,28 +10,23 @@ It allows users to view current and past cats, add and remove cats, edit their d
 The data is stored in and accessed from an external [Google spreadsheet](https://docs.google.com/spreadsheets/d/1lRe6DBT5WJAMoScPgmB7hlruGzHB4QdtOT1pqweaGos/edit?usp=sharing)
 
 ## Index - Table of Contents
-User Experience
-- User Goals
-- Design and Interface
-	+ General
-	+ Main Menu
-	+ Resident Directory Menu 
-	+ Weight Log Menu
-	+ Daily Food Calculator
-Future Features
-Resources
-Technologies
-Testing
-- Validation
-- Functionality
-- Device Compatibility
-- Browser Compatibility
-- User Stories
-Deployment
-- Edit and push to repository
-- Configuring APIs
-- Deploying to Heroku
-Acknowledgements
+1. [User Experience](https://github.com/wayne-AF/PP3-Feline-Pine-Cat-Retirement-Home#user-experience)
+- [User Goals](https://github.com/wayne-AF/PP3-Feline-Pine-Cat-Retirement-Home#user-goals)
+- [Design and Interface](https://github.com/wayne-AF/PP3-Feline-Pine-Cat-Retirement-Home#design-and-interface)
+2. [Future Features](https://github.com/wayne-AF/PP3-Feline-Pine-Cat-Retirement-Home#future-features)
+3. [Resources](https://github.com/wayne-AF/PP3-Feline-Pine-Cat-Retirement-Home#resources)
+4. [Technologies](https://github.com/wayne-AF/PP3-Feline-Pine-Cat-Retirement-Home#technologies)
+5. [Testing](https://github.com/wayne-AF/PP3-Feline-Pine-Cat-Retirement-Home#testing)
+- [Validation](https://github.com/wayne-AF/PP3-Feline-Pine-Cat-Retirement-Home#validation)
+- [Functionality](https://github.com/wayne-AF/PP3-Feline-Pine-Cat-Retirement-Home#functionality)
+- [Device Compatibility](https://github.com/wayne-AF/PP3-Feline-Pine-Cat-Retirement-Home#device-compatibility)
+- [Browser Compatibility](https://github.com/wayne-AF/PP3-Feline-Pine-Cat-Retirement-Home#browser-compatibility)
+- [User Stories](https://github.com/wayne-AF/PP3-Feline-Pine-Cat-Retirement-Home#user-stories)
+6. [Deployment](https://github.com/wayne-AF/PP3-Feline-Pine-Cat-Retirement-Home#deployment)
+- [Edit and push to repository](https://github.com/wayne-AF/PP3-Feline-Pine-Cat-Retirement-Home#edit-and-push-code-to-repository)
+- [Configuring APIs](https://github.com/wayne-AF/PP3-Feline-Pine-Cat-Retirement-Home#create-and-configure-google-spreadsheet-and-apis)
+- [Deploying to Heroku](https://github.com/wayne-AF/PP3-Feline-Pine-Cat-Retirement-Home#deploying-to-heroku)
+[Acknowledgements](https://github.com/wayne-AF/PP3-Feline-Pine-Cat-Retirement-Home#acknowledgements)
 ## User Experience
 One of the benefits to using a CLI application at the rescue centre is its simplicity. It requires almost no level of  technological literacy beyond the ability to follow on-screen instructions and type on a keyboard. It is easy to run, requires next to no training, and can be accessed through any browser. 
 ### User Goals
