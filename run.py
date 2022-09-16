@@ -525,7 +525,7 @@ def update_resident_selection():
             directory_menu()
 
         elif selection in res_list:
-            confirm = input(f"Do you want to update {selection}'s details?"
+            confirm = input(f"Do you want to update {selection}'s details? "
                             "y/n\n")
             if confirm == "x":
                 directory_menu()
