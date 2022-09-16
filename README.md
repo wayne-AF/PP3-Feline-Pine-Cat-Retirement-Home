@@ -126,6 +126,10 @@ This is the result I received for validating my code with [PEP8 Online](http://p
 ![pep8 validation screenshot](https://github.com/wayne-AF/PP3-Feline-Pine-Cat-Retirement-Home/blob/main/documentation/pep_validation.png?raw=true)
 The reported issue relates to the one instance of ASCII artwork featured in the application. Therefore, I am satisfied with the results of the PEP8 validation. 
 ### Functionality
+![pp3_testing_1](https://github.com/wayne-AF/PP3-Feline-Pine-Cat-Retirement-Home/blob/main/documentation/pp3_testing_1.png?raw=true)
+![pp3_testing_2](https://github.com/wayne-AF/PP3-Feline-Pine-Cat-Retirement-Home/blob/main/documentation/pp3_testing_2.png?raw=true)
+![pp3_testing_3](https://github.com/wayne-AF/PP3-Feline-Pine-Cat-Retirement-Home/blob/main/documentation/pp3_testing_3.png?raw=true)
+![pp3_testing_4](https://github.com/wayne-AF/PP3-Feline-Pine-Cat-Retirement-Home/blob/main/documentation/pp3_testing_4.png?raw=true)
 
 ### Device Compatibility
 As expected, the application was not functional on smartphones or tablets and could only be used on devices that have keyboards in order for application navigation. Tests were conducted on an iMac and a MacBook Air.
